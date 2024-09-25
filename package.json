@@ -1,0 +1,9 @@
+{
+  "name": "ton",
+  "scripts": {
+    "dev": "bun run --filter 'web' dev"
+  },
+  "workspaces": [
+    "web"
+  ]
+}
