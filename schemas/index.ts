@@ -1,3 +1,5 @@
+// TODO: fix up ronin local schema
+// @ts-ignore
 import { Schema } from "ronin/schema";
 
 type Account = Schema.Record<{
