@@ -5,9 +5,16 @@ export const createAirdropWalletToClaim = createServerFn(
   "POST",
   async (data: {
     airdropWalletAddress: string
-    walletsForClaimEntries: { walletAddress: string }[]
+    startDate: number // unix
+    endDate: number // unix
+    walletsForClaimEntries: {
+      walletAddress: string
+      tokenAmount: string
+      index: number
+    }[]
   }) => {
-    const { airdropWalletAddress } = data
+    const { airdropWalletAddress, startDate, endDate, walletsForClaimEntries } =
+      data
     const res = await create.airdropWalletToClaim.with({
       // aird,
     })
