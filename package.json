@@ -1,7 +1,8 @@
 {
   "name": "ton",
   "scripts": {
-    "dev": "bun run --filter 'web' dev"
+    "dev": "bun run --filter 'web' dev",
+    "build": "bun run --filter 'web' build"
   },
   "workspaces": [
     "web"
