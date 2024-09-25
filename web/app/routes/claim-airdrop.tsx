@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import useBlockchainActions from "../lib/airdrop/useActions"
 
-// ..
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
   const address = useTonAddress()
