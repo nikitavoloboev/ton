@@ -1,36 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import useBlockchainActions from "../lib/airdrop/useActions"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { getAirdrops } from "~/actions"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
   const address = useTonAddress()
 
-  // const { data, error, isLoading } = useSuspenseQuery({
-  //   queryKey: ["fetchAirdropData", address],
-  //   queryFn: () =>
-  //     fetch(
-  //       `${import.meta.env.VITE_ENDPOINT_API}/check-if-wallet-has-airdrops-to-claim`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           walletAddress: Address.parse(address).toString(),
-  //         }),
-  //       },
-  //     ).then((res) => {
-  //       if (!res.ok) {
-  //         throw new Error("Error fetching airdrop data")
-  //       }
-  //       return res.json()
-  //     }),
-  // })
-  // console.log(data, "data")
+  const { data, error, isLoading } = useSuspenseQuery({
+    queryKey: ["claim-airdrop", address],
+    queryFn: () => {},
+  })
+  console.log(data, "data")
 
-  // if (isLoading) return <div>Loading...</div>
-  // if (error) return <div>Error loading airdrop data</div>
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error loading airdrop data</div>
   // const { airDropAddress, entries } = data
 
   return (

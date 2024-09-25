@@ -3,10 +3,13 @@ import { batch, create, get, count } from "ronin"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
-  async (data: { walletAddress: string }) => {
-    const { walletAddress } = data
+  async (data: {
+    airdropWalletAddress: string
+    walletsForClaimEntries: { walletAddress: string }[]
+  }) => {
+    const { airdropWalletAddress } = data
     const res = await create.airdropWalletToClaim.with({
-      walletAddress,
+      // aird,
     })
     console.log(res)
   },

@@ -7,7 +7,6 @@ import airdropJson from "../../../data/airdrop.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
 import toast from "react-hot-toast"
 import { createFileRoute } from "@tanstack/react-router"
-import { createAirdropWalletToClaim } from "~/actions"
 
 const airDropAddress = Address.parse(
   "EQAgFwb4RShopfPqGPg2MjJEAKBcBsrPYQ7RSFlii8W_EpUz",
