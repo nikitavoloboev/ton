@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/start"
-import { batch, create, get, count } from "ronin"
+import { batch, count, create, get } from "ronin"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
@@ -15,8 +15,10 @@ export const createAirdropWalletToClaim = createServerFn(
   }) => {
     const { airdropWalletAddress, startDate, endDate, walletsForClaimEntries } =
       data
-    const res = await create.airdropWalletToClaim.with({
-      // aird,
+    const res = await create.airdropToClaim.with({
+      airdropAddress: airdropWalletAddress,
+      startDate: new Date(startDate * 1000),
+      endDate: new Date(endDate * 1000),
     })
     console.log(res)
   },

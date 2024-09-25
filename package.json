@@ -6,5 +6,8 @@
   },
   "workspaces": [
     "web"
-  ]
+  ],
+  "dependencies": {
+    "ronin": "^4.3.1"
+  }
 }
