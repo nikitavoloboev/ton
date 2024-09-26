@@ -2,12 +2,16 @@
   "name": "ton",
   "scripts": {
     "dev": "bun run --filter 'web' dev",
-    "build": "bun run --filter 'web' build"
+    "build": "bun run --filter 'web' build",
+    "ts": "bun run --watch scripts/run.ts"
   },
   "workspaces": [
     "web"
   ],
   "dependencies": {
     "ronin": "^4.3.1"
+  },
+  "prettier": {
+    "semi": false
   }
 }

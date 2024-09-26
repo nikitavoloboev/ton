@@ -104,15 +104,16 @@ function RouteComponent() {
     }
   }, [])
 
+  // TODO: remove it as there should be no default date for end date
   useEffect(() => {
     const now = new Date()
-    const thirtyMinutesLater = new Date(now.getTime() + 30 * 60000)
+    const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60000) // 2 hours in milliseconds
 
     // Set the start time to now
     form.setFieldValue("startTime", now.toISOString().slice(0, 16))
 
-    // Set the end date to 30 minutes from now
-    form.setFieldValue("endDate", thirtyMinutesLater.toISOString().slice(0, 16))
+    // Set the end date to 2 hours from now
+    form.setFieldValue("endDate", twoHoursLater.toISOString().slice(0, 16))
   }, [])
 
   return (
