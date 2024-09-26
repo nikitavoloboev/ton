@@ -21,6 +21,7 @@ export const createAirdropWalletToClaim = createServerFn(
       walletsForClaimEntries,
       jettonAddress,
     } = data
+
     const res = await create.airdropToClaim.with({
       airdropAddress: airdropWalletAddress,
       startDate: new Date(startDate * 1000),
