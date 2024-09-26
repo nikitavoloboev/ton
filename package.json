@@ -11,6 +11,9 @@
   "dependencies": {
     "ronin": "^4.3.1"
   },
+  "devDependencies": {
+    "@ronin/drophunt": "^0.0.0-3453479677957"
+  },
   "prettier": {
     "semi": false
   }
