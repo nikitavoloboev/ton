@@ -41,24 +41,23 @@ function RouteComponent() {
           amount: BigInt(entry.tokenAmount),
         }))
         const endTime = new Date(value.endDate).getTime() / 1000
-        // const airdropAddress = await createAirdrop({
-        //   jettonAddress,
-        //   endTime,
-        //   startTime: new Date(value.startTime).getTime() / 1000,
-        //   entries: parsedEntries,
-        // })
+        const airdropAddress = await createAirdrop({
+          jettonAddress,
+          endTime,
+          startTime: new Date(value.startTime).getTime() / 1000,
+          entries: parsedEntries,
+        })
         // console.log(airdropAddress, "airdrop address")
         // console.log(airdropAddress.toString(), "string")
         // TODO: just for testing
-        const airdropAddressAsString =
-          "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV"
+        // const airdropAddressAsString =
+        //   "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV"
         // TODO: in theory no need for this as createAirdrop should throw?
         // if (!airdropAddress) return
         setParsedEntriesSubmitted(parsedEntries)
-
         await createAirdropWalletToClaim({
-          // airdropAddress: airdropAddress.toString(),
-          airdropAddress: airdropAddressAsString,
+          // airdropAddress: airdropAddressAsString,
+          airdropAddress: airdropAddress.toString(),
           startDate: new Date(value.startTime).getTime() / 1000,
           endDate: endTime,
           jettonAddress: jettonAddress.toString(),
