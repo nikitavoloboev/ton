@@ -12,7 +12,7 @@
     "ronin": "^4.3.1"
   },
   "devDependencies": {
-    "@ronin/drophunt": "^0.0.0-3453479677957"
+    "@ronin/drophunt": "^0.0.0-3453496097762"
   },
   "prettier": {
     "semi": false

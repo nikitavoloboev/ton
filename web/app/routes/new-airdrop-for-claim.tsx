@@ -8,6 +8,7 @@ import useBlockchainActions from "../lib/airdrop/useActions"
 import toast from "react-hot-toast"
 import { createFileRoute } from "@tanstack/react-router"
 import { createAirdropWalletToClaim } from "~/actions"
+import { ClientOnly } from "~/lib/react"
 
 const airDropAddress = Address.parse(
   "EQAgFwb4RShopfPqGPg2MjJEAKBcBsrPYQ7RSFlii8W_EpUz",
@@ -374,21 +375,6 @@ function RouteComponent() {
       </div>
     </div>
   )
-}
-
-function useHydrated() {
-  return useSyncExternalStore(
-    () => {
-      return () => {}
-    },
-    () => true,
-    () => false,
-  )
-}
-
-const ClientOnly = ({ children }: React.PropsWithChildren) => {
-  const hydrated = useHydrated()
-  return hydrated ? <>{children}</> : null
 }
 
 export const Route = createFileRoute("/new-airdrop-for-claim")({

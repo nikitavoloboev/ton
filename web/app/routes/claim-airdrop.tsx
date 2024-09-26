@@ -2,6 +2,8 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import useBlockchainActions from "../lib/airdrop/useActions"
+import { ClientOnly } from "~/lib/react"
+import { getAirdropsAvailableForClaim } from "~/actions"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
@@ -9,13 +11,15 @@ function RouteComponent() {
 
   const { data, error, isLoading } = useSuspenseQuery({
     queryKey: ["claim-airdrop", address],
-    queryFn: () => {},
+    queryFn: async () => {
+      const res = await getAirdropsAvailableForClaim()
+      return res
+    },
   })
   console.log(data, "data")
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading airdrop data</div>
-  // const { airDropAddress, entries } = data
 
   return (
     <>
@@ -24,19 +28,23 @@ function RouteComponent() {
           <h2 className="text-2xl font-bold ">Claim Airdrop</h2>
           <TonConnectButton />
         </div>
-        {/* <button
-					onClick={() => {
-						claimAirdrop({ airdropAddress: airDropAddress, entries })
-					}}
-					className={`w-full px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 `}
-				>
-					Claim Airdrop
-				</button> */}
+        <button
+          onClick={() => {
+            // claimAirdrop({ airdropAddress: airDropAddress, entries })
+          }}
+          className={`w-full px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 `}
+        >
+          Claim Airdrop
+        </button>
       </div>
     </>
   )
 }
 
 export const Route = createFileRoute("/claim-airdrop")({
-  component: () => <RouteComponent />,
+  component: () => (
+    <ClientOnly>
+      <RouteComponent />
+    </ClientOnly>
+  ),
 })

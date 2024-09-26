@@ -37,29 +37,20 @@ export const createAirdropWalletToClaim = createServerFn(
         airdropToClaim: airdropToClaim.id,
         walletAddress,
         tokenAmount,
-        index,
+        indexNumber: index,
       })
     })
     console.log(airdropToClaim)
   },
 )
 
-export const testAction = createServerFn(
-  "POST",
-  async (data: { something: string }) => {
-    const { something } = data
-    console.log(something, "something")
-    throw new Error("broke")
-  },
-)
-
-export const getAirdrops = createServerFn("GET", async () => {
-  const [airdrops, userCount] = await batch(() => [
-    get.airdrops.orderedBy.ascending(["orderNumber"]),
-    count.users(),
-  ])
-  return {
-    airdrops,
-    userCount,
-  }
+export const getAirdropsAvailableForClaim = createServerFn("GET", async () => {
+  return [
+    {
+      airdropAddress: "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV",
+      startDate: 1727344080,
+      endDate: 1727351280,
+      jettonAddress: "EQC6cYfMFYFur2IgJroc3wBxg-q4hOxsqGQwEYSEARxtOt3V",
+    },
+  ]
 })

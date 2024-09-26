@@ -30,12 +30,13 @@ async function main() {
   if (!airdropToClaim) throw new Error("Failed to create airdrop to claim")
   airdropWalletsForClaim.forEach(async (entry) => {
     console.log(entry, "entry")
+    console.log(airdropToClaim.id, "id")
     const { walletAddress, tokenAmount, index } = entry
     await create.airdropWalletForClaim.with({
       airdropToClaim: airdropToClaim.id,
       walletAddress,
       tokenAmount,
-      index,
+      indexNumber: index,
     })
   })
   console.log(airdropToClaim)
