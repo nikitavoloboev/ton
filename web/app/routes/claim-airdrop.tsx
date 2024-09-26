@@ -1,8 +1,7 @@
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import useBlockchainActions from "../lib/airdrop/useActions"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { getAirdrops } from "~/actions"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()

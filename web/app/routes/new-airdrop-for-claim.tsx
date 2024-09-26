@@ -2,7 +2,7 @@ import { useForm } from "@tanstack/react-form"
 import { Address } from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
 import { Trash2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 import airdropJson from "../../../data/airdrop.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
 import toast from "react-hot-toast"
@@ -237,13 +237,16 @@ function RouteComponent() {
               <label className="flex flex-col flex-grow">
                 <span className="mb-1 text-sm font-medium text-gray-700 dark:text-white">
                   {/* TODO: hide the () if it was set by user in some way */}
-                  Start Time (set to now by default)
+                  Start Time
                 </span>
                 <input
                   type="datetime-local"
                   value={field.state.value || ""}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                             focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                             bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                             placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </label>
             )}
@@ -253,13 +256,17 @@ function RouteComponent() {
               <label className="flex flex-col flex-grow">
                 <span className="mb-1 text-sm font-medium text-gray-700 dark:text-white">
                   {/* TODO: hide the () if it was set by user in some way */}
-                  End Date (set to 30 minutes from now by default)
+                  End Date
                 </span>
                 <input
                   type="datetime-local"
+                  // TODO: don't set default end date
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                  bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                  placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </label>
             )}
@@ -277,7 +284,10 @@ function RouteComponent() {
                     type="text"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                               placeholder-gray-500 dark:placeholder-gray-400"
                   />
                 </label>
               )}
@@ -292,7 +302,10 @@ function RouteComponent() {
                     type="number"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                               placeholder-gray-500 dark:placeholder-gray-400"
                   />
                 </label>
               )}
@@ -372,6 +385,25 @@ function RouteComponent() {
   )
 }
 
+function useHydrated() {
+  return useSyncExternalStore(
+    () => {
+      return () => {}
+    },
+    () => true,
+    () => false,
+  )
+}
+
+const ClientOnly = ({ children }: React.PropsWithChildren) => {
+  const hydrated = useHydrated()
+  return hydrated ? <>{children}</> : null
+}
+
 export const Route = createFileRoute("/new-airdrop-for-claim")({
-  component: () => <RouteComponent />,
+  component: () => (
+    <ClientOnly>
+      <RouteComponent />
+    </ClientOnly>
+  ),
 })
