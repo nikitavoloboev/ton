@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/start"
 import { batch, count, create, get } from "ronin"
+import { appendToClipboard } from "./lib/utils"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
@@ -14,6 +15,7 @@ export const createAirdropWalletToClaim = createServerFn(
       index: number
     }[]
   }) => {
+    appendToClipboard(data)
     const {
       airdropAddress,
       startDate,
