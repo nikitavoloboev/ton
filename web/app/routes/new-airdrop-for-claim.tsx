@@ -39,6 +39,8 @@ function RouteComponent() {
           address: Address.parse(entry.userWallet),
           amount: BigInt(entry.tokenAmount),
         }))
+        console.log(parsedEntries, "parsed entries")
+        return
         const endTime = new Date(value.endDate).getTime() / 1000
         const airdropAddress = await createAirdrop({
           jettonAddress,

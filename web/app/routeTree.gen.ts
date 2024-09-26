@@ -15,6 +15,7 @@ import { Route as UsersImport } from './routes/users'
 import { Route as RedirectImport } from './routes/redirect'
 import { Route as PostsImport } from './routes/posts'
 import { Route as NewAirdropForClaimImport } from './routes/new-airdrop-for-claim'
+import { Route as MultiWalletTransactionImport } from './routes/multi-wallet-transaction'
 import { Route as DeferredImport } from './routes/deferred'
 import { Route as ClaimAirdropImport } from './routes/claim-airdrop'
 import { Route as LayoutImport } from './routes/_layout'
@@ -47,6 +48,11 @@ const PostsRoute = PostsImport.update({
 
 const NewAirdropForClaimRoute = NewAirdropForClaimImport.update({
   path: '/new-airdrop-for-claim',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MultiWalletTransactionRoute = MultiWalletTransactionImport.update({
+  path: '/multi-wallet-transaction',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -140,6 +146,13 @@ declare module '@tanstack/react-router' {
       path: '/deferred'
       fullPath: '/deferred'
       preLoaderRoute: typeof DeferredImport
+      parentRoute: typeof rootRoute
+    }
+    '/multi-wallet-transaction': {
+      id: '/multi-wallet-transaction'
+      path: '/multi-wallet-transaction'
+      fullPath: '/multi-wallet-transaction'
+      preLoaderRoute: typeof MultiWalletTransactionImport
       parentRoute: typeof rootRoute
     }
     '/new-airdrop-for-claim': {
@@ -285,6 +298,7 @@ export interface FileRoutesByFullPath {
   '': typeof LayoutLayout2RouteWithChildren
   '/claim-airdrop': typeof ClaimAirdropRoute
   '/deferred': typeof DeferredRoute
+  '/multi-wallet-transaction': typeof MultiWalletTransactionRoute
   '/new-airdrop-for-claim': typeof NewAirdropForClaimRoute
   '/posts': typeof PostsRouteWithChildren
   '/redirect': typeof RedirectRoute
@@ -303,6 +317,7 @@ export interface FileRoutesByTo {
   '': typeof LayoutLayout2RouteWithChildren
   '/claim-airdrop': typeof ClaimAirdropRoute
   '/deferred': typeof DeferredRoute
+  '/multi-wallet-transaction': typeof MultiWalletTransactionRoute
   '/new-airdrop-for-claim': typeof NewAirdropForClaimRoute
   '/redirect': typeof RedirectRoute
   '/posts/$postId': typeof PostsPostIdRoute
@@ -320,6 +335,7 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/claim-airdrop': typeof ClaimAirdropRoute
   '/deferred': typeof DeferredRoute
+  '/multi-wallet-transaction': typeof MultiWalletTransactionRoute
   '/new-airdrop-for-claim': typeof NewAirdropForClaimRoute
   '/posts': typeof PostsRouteWithChildren
   '/redirect': typeof RedirectRoute
@@ -341,6 +357,7 @@ export interface FileRouteTypes {
     | ''
     | '/claim-airdrop'
     | '/deferred'
+    | '/multi-wallet-transaction'
     | '/new-airdrop-for-claim'
     | '/posts'
     | '/redirect'
@@ -358,6 +375,7 @@ export interface FileRouteTypes {
     | ''
     | '/claim-airdrop'
     | '/deferred'
+    | '/multi-wallet-transaction'
     | '/new-airdrop-for-claim'
     | '/redirect'
     | '/posts/$postId'
@@ -373,6 +391,7 @@ export interface FileRouteTypes {
     | '/_layout'
     | '/claim-airdrop'
     | '/deferred'
+    | '/multi-wallet-transaction'
     | '/new-airdrop-for-claim'
     | '/posts'
     | '/redirect'
@@ -393,6 +412,7 @@ export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
   ClaimAirdropRoute: typeof ClaimAirdropRoute
   DeferredRoute: typeof DeferredRoute
+  MultiWalletTransactionRoute: typeof MultiWalletTransactionRoute
   NewAirdropForClaimRoute: typeof NewAirdropForClaimRoute
   PostsRoute: typeof PostsRouteWithChildren
   RedirectRoute: typeof RedirectRoute
@@ -405,6 +425,7 @@ const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
   ClaimAirdropRoute: ClaimAirdropRoute,
   DeferredRoute: DeferredRoute,
+  MultiWalletTransactionRoute: MultiWalletTransactionRoute,
   NewAirdropForClaimRoute: NewAirdropForClaimRoute,
   PostsRoute: PostsRouteWithChildren,
   RedirectRoute: RedirectRoute,
@@ -428,6 +449,7 @@ export const routeTree = rootRoute
         "/_layout",
         "/claim-airdrop",
         "/deferred",
+        "/multi-wallet-transaction",
         "/new-airdrop-for-claim",
         "/posts",
         "/redirect",
@@ -449,6 +471,9 @@ export const routeTree = rootRoute
     },
     "/deferred": {
       "filePath": "deferred.tsx"
+    },
+    "/multi-wallet-transaction": {
+      "filePath": "multi-wallet-transaction.tsx"
     },
     "/new-airdrop-for-claim": {
       "filePath": "new-airdrop-for-claim.tsx"

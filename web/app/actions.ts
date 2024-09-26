@@ -21,7 +21,6 @@ export const createAirdropWalletToClaim = createServerFn(
       airdropWalletsForClaim,
       jettonAddress,
     } = data
-
     const airdropToClaim = await create.airdropToClaim.with({
       airdropAddress,
       jettonAddress,

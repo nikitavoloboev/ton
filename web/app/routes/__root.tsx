@@ -92,7 +92,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             activeOptions={{ exact: true }}
           >
             Home
-          </Link>{" "}
+          </Link>
+          {" | "}
           <Link
             to="/new-airdrop-for-claim"
             activeProps={{
@@ -101,7 +102,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             activeOptions={{ exact: true }}
           >
             New Airdrop for Claim
-          </Link>{" "}
+          </Link>
+          {" | "}
           <Link
             to="/claim-airdrop"
             activeProps={{
@@ -110,7 +112,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             activeOptions={{ exact: true }}
           >
             Claim Airdrop
-          </Link>{" "}
+          </Link>
+          {" | "}
+          <Link
+            to="/multi-wallet-transaction"
+            activeProps={{
+              className: "font-bold",
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Multi Wallet Transaction
+          </Link>
         </div>
         <hr />
         {children}
