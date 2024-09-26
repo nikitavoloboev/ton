@@ -15,7 +15,7 @@
     "@tanstack/react-router": "^1.58.9",
     "@tanstack/react-router-with-query": "^1.58.9",
     "@tanstack/router-devtools": "^1.58.9",
-    "@tanstack/start": "^1.58.9",
+    "@tanstack/start": "^1.58.10",
     "@ton/core": "^0.58.1",
     "@ton/ton": "^15.0.0",
     "@tonconnect/ui-react": "^2.0.9",
@@ -30,7 +30,8 @@
     "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
-    "@types/node": "^22.7.0",
+    "@ronin/drophunt": "^0.0.0-3453478649889",
+    "@types/node": "^22.7.2",
     "@types/react": "^18.3.9",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

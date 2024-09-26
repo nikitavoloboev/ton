@@ -7,6 +7,7 @@ import airdropJson from "../../../data/airdrop.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
 import toast from "react-hot-toast"
 import { createFileRoute } from "@tanstack/react-router"
+import { createAirdropWalletToClaim } from "~/actions"
 
 const airDropAddress = Address.parse(
   "EQAgFwb4RShopfPqGPg2MjJEAKBcBsrPYQ7RSFlii8W_EpUz",
@@ -46,35 +47,20 @@ function RouteComponent() {
           startTime: new Date(value.startTime).getTime() / 1000,
           entries: parsedEntries,
         })
+        // TODO: in theory no need for this as createAirdrop should throw?
+        if (!airdropAddress) return
         setParsedEntriesSubmitted(parsedEntries)
-        parsedEntries.forEach(async (entry, index) => {
-          // waiting for 1 second for each entry to not spam server
-          await new Promise((resolve) => setTimeout(resolve, 1000))
 
-          // await createAirdropWalletToClaim({
-
-          // })
-
-          // TODO: will be nicer when tanstack start works with server actions..
-          await fetch(
-            `${import.meta.env.VITE_ENDPOINT_API}/create-airdrop-wallet-to-claim`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                walletAddress: entry.address.toString(),
-                addressToClaim: airdropAddress.toString(),
-                number: index,
-                validUntil: endTime,
-              }),
-            },
-          ).then((response) => {
-            if (!response.ok) {
-              throw new Error("Error creating airdrop wallet to claim")
-            }
-          })
+        await createAirdropWalletToClaim({
+          airdropWalletAddress: airdropAddress.toString(),
+          startDate: new Date(value.startTime).getTime() / 1000,
+          endDate: endTime,
+          jettonAddress: jettonAddress.toString(),
+          walletsForClaimEntries: parsedEntries.map((entry, index) => ({
+            walletAddress: entry.address.toString(),
+            tokenAmount: entry.amount.toString(),
+            index,
+          })),
         })
         toast.success("Airdrop created successfully")
       } catch (error) {
