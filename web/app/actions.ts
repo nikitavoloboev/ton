@@ -4,41 +4,41 @@ import { batch, count, create, get } from "ronin"
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
   async (data: {
-    airdropWalletAddress: string
+    airdropAddress: string
     startDate: number // unix
     endDate: number // unix
     jettonAddress: string
-    walletsForClaimEntries: {
+    airdropWalletsForClaim: {
       walletAddress: string
       tokenAmount: string
       index: number
     }[]
   }) => {
     const {
-      airdropWalletAddress,
+      airdropAddress,
       startDate,
       endDate,
-      walletsForClaimEntries,
+      airdropWalletsForClaim,
       jettonAddress,
     } = data
 
-    const res = await create.airdropToClaim.with({
-      airdropAddress: airdropWalletAddress,
+    const airdropToClaim = await create.airdropToClaim.with({
+      airdropAddress,
+      jettonAddress,
       startDate: new Date(startDate * 1000),
       endDate: new Date(endDate * 1000),
-      jettonAddress,
     })
-    if (!res) throw new Error("Failed to create airdrop to claim")
-    walletsForClaimEntries.forEach(async (entry) => {
+    if (!airdropToClaim) throw new Error("Failed to create airdrop to claim")
+    airdropWalletsForClaim.forEach(async (entry) => {
       const { walletAddress, tokenAmount, index } = entry
-      await create.walletToClaimForAirdrop.with({
+      await create.airdropWalletForClaim.with({
+        airdropToClaim: airdropToClaim.id,
         walletAddress,
         tokenAmount,
         index,
-        airdropToClaim: res.id,
       })
     })
-    console.log(res)
+    console.log(airdropToClaim)
   },
 )
 

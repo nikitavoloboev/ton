@@ -39,7 +39,6 @@ function RouteComponent() {
           address: Address.parse(entry.userWallet),
           amount: BigInt(entry.tokenAmount),
         }))
-        console.log(parsedEntries, "parsed..")
         const endTime = new Date(value.endDate).getTime() / 1000
         const airdropAddress = await createAirdrop({
           jettonAddress,
@@ -52,11 +51,11 @@ function RouteComponent() {
         setParsedEntriesSubmitted(parsedEntries)
 
         await createAirdropWalletToClaim({
-          airdropWalletAddress: airdropAddress.toString(),
+          airdropAddress: airdropAddress.toString(),
           startDate: new Date(value.startTime).getTime() / 1000,
           endDate: endTime,
           jettonAddress: jettonAddress.toString(),
-          walletsForClaimEntries: parsedEntries.map((entry, index) => ({
+          airdropWalletsForClaim: parsedEntries.map((entry, index) => ({
             walletAddress: entry.address.toString(),
             tokenAmount: entry.amount.toString(),
             index,
@@ -164,7 +163,6 @@ function RouteComponent() {
                     }),
                   )
                   form.setFieldValue("pairs", mappedPairs)
-                  console.log("File parsed successfully:", newPairs)
                 } catch (error) {
                   console.error("Error parsing JSON file:", error)
                 }
