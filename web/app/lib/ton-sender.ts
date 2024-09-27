@@ -189,8 +189,8 @@ export function useProviderSender(): Sender {
                     validUntil: Math.floor((Date.now() + 5 * 60 * 1000) / 1000)
                 });
             }
-
-        }
+        },
+        address: tonConnectUI.wallet ? Address.parse(tonConnectUI.wallet.account.address) : undefined
     }), [tonConnectUI]);
 
 
