@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/start"
 import { batch, count, create, get } from "ronin"
 import { appendToClipboard } from "./lib/utils"
+import { Address } from "@ton/core"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
@@ -38,6 +39,7 @@ export const createAirdropWalletToClaim = createServerFn(
         walletAddress,
         tokenAmount,
         indexNumber: index,
+        claimed: false,
       })
     })
     console.log(airdropToClaim)
@@ -47,13 +49,32 @@ export const createAirdropWalletToClaim = createServerFn(
 export const getAirdropsAvailableForClaim = createServerFn(
   "POST",
   async (data: { address: string }) => {
-    return [
-      {
-        airdropAddress: "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV",
-        startDate: 1727344080,
-        endDate: 1727351280,
-        jettonAddress: "EQC6cYfMFYFur2IgJroc3wBxg-q4hOxsqGQwEYSEARxtOt3V",
-      },
-    ]
+    const { address } = data
+    const properAddress = Address.parse(address).toString()
+    const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
+      walletAddress: properAddress,
+      claimed: false,
+    })
+    let airdropsForClaim: any[] = []
+    await Promise.all(
+      airdropWalletsForClaim.map(async (airdrop) => {
+        const airdropToClaim = await get.airdropToClaim.with({
+          id: airdrop.airdropToClaim,
+        })
+        airdropsForClaim.push(airdropToClaim)
+      }),
+    )
+    return airdropsForClaim
+  },
+)
+
+export const getEntriesForAirdrop = createServerFn(
+  "POST",
+  async (data: { airdropAddress: string }) => {
+    const { airdropAddress } = data
+    const entries = await get.airdropWalletsForClaim.with({
+      airdropToClaim: airdropAddress,
+    })
+    return entries
   },
 )

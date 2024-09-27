@@ -12,7 +12,6 @@ function RouteComponent() {
   const { data, error, isLoading } = useSuspenseQuery({
     queryKey: ["claim-airdrop", address],
     queryFn: async () => {
-      console.log(address, "address")
       const res = await getAirdropsAvailableForClaim({ address })
       return res
     },
@@ -29,14 +28,30 @@ function RouteComponent() {
           <h2 className="text-2xl font-bold ">Claim Airdrop</h2>
           <TonConnectButton />
         </div>
-        <button
+        <h1>Airdrops available for claim</h1>
+        {data.map((airdrop) => (
+          <div key={airdrop.id}>
+            <p
+              className="cursor-pointer"
+              onClick={async () => {
+                await claimAirdrop({
+                  airdropAddress: airdrop.airdropAddress,
+                  entries: [],
+                })
+              }}
+            >
+              {airdrop.airdropAddress}
+            </p>
+          </div>
+        ))}
+        {/* <button
           onClick={() => {
             // claimAirdrop({ airdropAddress: airDropAddress, entries })
           }}
           className={`w-full px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 `}
         >
           Claim Airdrop
-        </button>
+        </button> */}
       </div>
     </>
   )

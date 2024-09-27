@@ -61,6 +61,7 @@ function RouteComponent() {
         })
         toast.success("Airdrop created successfully")
       } catch (error) {
+        console.log(error)
         const errorMessage =
           error instanceof Error ? error.message : "An unknown error occurred"
 
@@ -340,25 +341,6 @@ function RouteComponent() {
           )}
         </form.Subscribe>
       </form>
-
-      <div className="mt-4 mb-4">
-        <label
-          htmlFor="airDropAddress"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Airdrop Address
-        </label>
-        <input
-          type="text"
-          id="airDropAddress"
-          value={airDropAddress ? airDropAddress.toString() : ""}
-          onChange={(e) => {
-            setAirdropAddress(Address.parse(e.target.value))
-          }}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Enter airdrop address"
-        />
-      </div>
     </div>
   )
 }

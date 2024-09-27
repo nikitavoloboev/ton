@@ -1,10 +1,22 @@
 import { batch, count, create, get } from "ronin"
+import { Address } from "@ton/core"
 
 async function main() {
   const address = "0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM"
-  const airdropsForClaim = await get.airdropWalletsForClaim.with({
-    walletAddress: address,
+  const properAddress = Address.parse(address).toString()
+  const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
+    walletAddress: properAddress,
+    claimed: false,
   })
+  let airdropsForClaim: any[] = []
+  await Promise.all(
+    airdropWalletsForClaim.map(async (airdrop) => {
+      const airdropToClaim = await get.airdropToClaim.with({
+        id: airdrop.airdropToClaim,
+      })
+      airdropsForClaim.push(airdropToClaim)
+    }),
+  )
   console.log(airdropsForClaim, "airdropsForClaim")
 }
 
