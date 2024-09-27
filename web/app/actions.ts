@@ -44,13 +44,16 @@ export const createAirdropWalletToClaim = createServerFn(
   },
 )
 
-export const getAirdropsAvailableForClaim = createServerFn("GET", async () => {
-  return [
-    {
-      airdropAddress: "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV",
-      startDate: 1727344080,
-      endDate: 1727351280,
-      jettonAddress: "EQC6cYfMFYFur2IgJroc3wBxg-q4hOxsqGQwEYSEARxtOt3V",
-    },
-  ]
-})
+export const getAirdropsAvailableForClaim = createServerFn(
+  "POST",
+  async (data: { address: string }) => {
+    return [
+      {
+        airdropAddress: "EQA7W9Zm7f1G1Nycex0fAvTBtJo3IJsKdvj3nMv9zKr8V1kV",
+        startDate: 1727344080,
+        endDate: 1727351280,
+        jettonAddress: "EQC6cYfMFYFur2IgJroc3wBxg-q4hOxsqGQwEYSEARxtOt3V",
+      },
+    ]
+  },
+)

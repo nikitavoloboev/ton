@@ -12,7 +12,8 @@ function RouteComponent() {
   const { data, error, isLoading } = useSuspenseQuery({
     queryKey: ["claim-airdrop", address],
     queryFn: async () => {
-      const res = await getAirdropsAvailableForClaim()
+      console.log(address, "address")
+      const res = await getAirdropsAvailableForClaim({ address })
       return res
     },
   })
