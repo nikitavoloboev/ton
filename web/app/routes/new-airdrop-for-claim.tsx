@@ -1,18 +1,15 @@
 import { useForm } from "@tanstack/react-form"
+import { createFileRoute } from "@tanstack/react-router"
 import { Address } from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
 import { Trash2 } from "lucide-react"
-import { useEffect, useState, useSyncExternalStore } from "react"
-import airdropJson from "../../../data/airdrop.json"
-import useBlockchainActions from "../lib/airdrop/useActions"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import { createFileRoute } from "@tanstack/react-router"
 import { createAirdropWalletToClaim } from "~/actions"
 import { ClientOnly } from "~/lib/react"
+import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
+import useBlockchainActions from "../lib/airdrop/useActions"
 
-const airDropAddress = Address.parse(
-  "EQAgFwb4RShopfPqGPg2MjJEAKBcBsrPYQ7RSFlii8W_EpUz",
-)
 const jettonAddress = Address.parse(import.meta.env.VITE_MASTER_ADDRESS)
 
 function RouteComponent() {
@@ -26,6 +23,8 @@ function RouteComponent() {
   const [parsedEntriesSubmitted, setParsedEntriesSubmitted] = useState<
     { address: Address; amount: bigint }[]
   >([])
+
+  const [airDropAddress, setAirdropAddress] = useState<Address | null>(null)
 
   const form = useForm({
     defaultValues: {
@@ -47,6 +46,7 @@ function RouteComponent() {
           startTime: new Date(value.startTime).getTime() / 1000,
           entries: parsedEntries,
         })
+        setAirdropAddress(airdropAddress)
         setParsedEntriesSubmitted(parsedEntries)
         await createAirdropWalletToClaim({
           airdropAddress: airdropAddress.toString(),
@@ -183,7 +183,7 @@ function RouteComponent() {
           className="hidden"
           onClick={() => {
             try {
-              const newPairs = airdropJson.map((pair, index) => ({
+              const newPairs = newAirdropForClaimJson.map((pair, index) => ({
                 id: index,
                 wallet: pair.wallet,
                 amount: pair.amount.toString(), // Convert amount to string
@@ -341,28 +341,23 @@ function RouteComponent() {
         </form.Subscribe>
       </form>
 
-      <div className="mt-8 w-full">
-        <button
-          className={`w-full px-4 py-2 text-white rounded transition-colors ${
-            parsedEntriesSubmitted.length > 0
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-          disabled={parsedEntriesSubmitted.length === 0}
-          onClick={() => {
-            if (!submittedAirdropWalletEntries) return
-            sendJettonsToAirdrop(
-              airDropAddress,
-              parsedEntriesSubmitted.reduce((a, b) => ({
-                address: a.address,
-                amount: a.amount + b.amount,
-              })).amount,
-              jettonAddress,
-            )
-          }}
+      <div className="mt-4 mb-4">
+        <label
+          htmlFor="airDropAddress"
+          className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Send Jettons to Airdrop
-        </button>
+          Airdrop Address
+        </label>
+        <input
+          type="text"
+          id="airDropAddress"
+          value={airDropAddress ? airDropAddress.toString() : ""}
+          onChange={(e) => {
+            setAirdropAddress(Address.parse(e.target.value))
+          }}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Enter airdrop address"
+        />
       </div>
     </div>
   )
