@@ -251,7 +251,7 @@ async function claimAirdrop(
         console.error(e)
         balance = BigInt(0)
     }
-    await helper.sendDeploy(sender, BigInt(123), proof, balance > toNano('0.13') ? toNano('0.02') : toNano('0.15'))
+    await helper.sendDeploy(sender, BigInt(123), proof, balance > toNano('0.09') ? toNano('0.02') : toNano('0.1'))
     // await waitForDeploy(provider, helper.address)
 
     // await helper.sendClaim(BigInt(123), proof) // 123 -> any query_id
