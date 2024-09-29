@@ -29,15 +29,18 @@ export class AirdropHelper implements Contract {
         return new AirdropHelper(contractAddress(workchain, init), init);
     }
 
-    async sendDeploy(provider: ContractProvider, via: Sender) {
+    async sendDeploy(provider: ContractProvider, via: Sender, queryId: bigint, proof: Cell, forwardAmount: bigint) {
         await provider.internal(via, {
-            value: toNano('0.15'),
+            value: forwardAmount,
+            body: beginCell()
+                .storeUint(0x1, 32) //op code
+                .storeUint(queryId, 64) //query_id
+                .storeRef(proof) //proof
+                .endCell(),
+            bounce: true
         });
     }
 
-    async sendClaim(provider: ContractProvider, queryId: bigint, proof: Cell) {
-        await provider.external(beginCell().storeUint(queryId, 64).storeRef(proof).endCell());
-    }
 
     async getClaimed(provider: ContractProvider): Promise<boolean> {
         if ((await provider.getState()).state.type == 'uninit') {

@@ -191,7 +191,7 @@ export function useProviderSender(): Sender {
             }
         },
         address: tonConnectUI.wallet ? Address.parse(tonConnectUI.wallet.account.address) : undefined
-    }), [tonConnectUI]);
+    }), [tonConnectUI.wallet?.account?.address?.toString(), tonConnectUI]);
 
 
 }
