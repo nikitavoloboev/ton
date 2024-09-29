@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
-import { Address } from "@ton/core"
+import {Address, fromNano, toNano} from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
 import { Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -37,7 +37,7 @@ function RouteComponent() {
         setSubmittedAirdropWalletEntries(value.pairs)
         const parsedEntries = value.pairs.map((entry) => ({
           address: Address.parse(entry.userWallet),
-          amount: BigInt(entry.tokenAmount),
+          amount: toNano(entry.tokenAmount),
         }))
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
         const startTime = Math.floor(new Date(value.startTime).getTime() / 1000);
