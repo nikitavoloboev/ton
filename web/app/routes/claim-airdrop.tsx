@@ -49,7 +49,7 @@ function RouteComponent() {
                 console.log(airdrop.airdropAddress, "testing..")
 
                 await claimAirdrop({
-                  airdropAddress: airdrop.airdropAddress,
+                  airdropAddress: Address.parse(airdrop.airdropAddress),
                   entries: parsedEntries,
                 })
 
