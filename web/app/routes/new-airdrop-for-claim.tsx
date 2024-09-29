@@ -39,11 +39,13 @@ function RouteComponent() {
           address: Address.parse(entry.userWallet),
           amount: BigInt(entry.tokenAmount),
         }))
-        const endTime = new Date(value.endDate).getTime() / 1000
+        const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
+        const startTime = Math.floor(new Date(value.startTime).getTime() / 1000);
+        console.log("Start time", startTime, "End time", endTime)
         const airdropAddress = await createAirdrop({
           jettonAddress,
           endTime,
-          startTime: new Date(value.startTime).getTime() / 1000,
+          startTime,
           entries: parsedEntries,
         })
         setAirdropAddress(airdropAddress)
