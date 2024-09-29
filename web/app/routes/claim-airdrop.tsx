@@ -3,7 +3,8 @@ import { createFileRoute } from "@tanstack/react-router"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import useBlockchainActions from "../lib/airdrop/useActions"
 import { ClientOnly } from "~/lib/react"
-import { getAirdropsAvailableForClaim } from "~/actions"
+import { getAirdropsAvailableForClaim, getEntriesForAirdrop } from "~/actions"
+import { Address } from "@ton/core"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
@@ -16,7 +17,6 @@ function RouteComponent() {
       return res
     },
   })
-  console.log(data, "data")
 
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading airdrop data</div>
@@ -34,10 +34,32 @@ function RouteComponent() {
             <p
               className="cursor-pointer"
               onClick={async () => {
+                const entries = await getEntriesForAirdrop({
+                  airdropAddress: airdrop.airdropAddress,
+                })
+                console.log(entries, "entries")
+
+                // @ts-ignore
+                const parsedEntries = entries.map((entry) => ({
+                  address: Address.parse(entry.walletAddress),
+                  // address: entry.walletAddress,
+                  amount: BigInt(entry.tokenAmount),
+                }))
+                console.log(parsedEntries, "parsedEntries")
+                console.log(airdrop.airdropAddress, "testing..")
+
                 await claimAirdrop({
                   airdropAddress: airdrop.airdropAddress,
-                  entries: [],
+                  entries: parsedEntries,
                 })
+
+                // here for ref of what `entries` should look like
+                // const entries = [
+                //   {
+                //     address: Address.parse("0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM"),
+                //     amount: 200000n,
+                //   },
+                // ]
               }}
             >
               {airdrop.airdropAddress}

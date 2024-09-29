@@ -73,8 +73,11 @@ export const getEntriesForAirdrop = createServerFn(
   async (data: { airdropAddress: string }) => {
     const { airdropAddress } = data
     const entries = await get.airdropWalletsForClaim.with({
-      airdropToClaim: airdropAddress,
+      airdropToClaim: {
+        airdropAddress,
+      },
     })
-    return entries
+    // Sort entries by indexNumber in ascending order
+    return entries.sort((a, b) => a.indexNumber - b.indexNumber)
   },
 )

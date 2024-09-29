@@ -2,6 +2,16 @@ import { batch, count, create, get } from "ronin"
 import { Address } from "@ton/core"
 
 async function main() {
+  const airdropAddress = "EQDPni7dGHmUCm5iJXVNl31YWd5EVTDsRZ_Bhpi56hY8abBT"
+  const entries = await get.airdropWalletsForClaim.with({
+    airdropToClaim: {
+      airdropAddress,
+    },
+  })
+  console.log(entries, "entries")
+}
+
+async function getAirdrops() {
   const address = "0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM"
   const properAddress = Address.parse(address).toString()
   const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
