@@ -50,6 +50,7 @@ export const getAirdropsAvailableForClaim = createServerFn(
   "POST",
   async (data: { address: string }) => {
     const { address } = data
+    const currentDate = new Date()
     const properAddress = Address.parse(address).toString()
     const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
       walletAddress: properAddress,
@@ -64,7 +65,9 @@ export const getAirdropsAvailableForClaim = createServerFn(
         airdropsForClaim.push(airdropToClaim)
       }),
     )
-    return airdropsForClaim
+    return airdropsForClaim.filter(
+      (airdrop) => new Date(airdrop.endDate) > currentDate,
+    )
   },
 )
 
