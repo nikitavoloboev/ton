@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
-import {Address, fromNano, toNano} from "@ton/core"
+import { Address, fromNano, toNano } from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
 import { Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -40,7 +40,7 @@ function RouteComponent() {
           amount: toNano(entry.tokenAmount),
         }))
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
-        const startTime = Math.floor(new Date(value.startTime).getTime() / 1000);
+        const startTime = Math.floor(new Date(value.startTime).getTime() / 1000)
         console.log("Start time", startTime, "End time", endTime)
         const airdropAddress = await createAirdrop({
           jettonAddress,
@@ -104,17 +104,15 @@ function RouteComponent() {
     }
   }, [])
 
-  // TODO: remove it as there should be no default date for end date
-  useEffect(() => {
-    const now = new Date()
-    const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60000) // 2 hours in milliseconds
-
-    // Set the start time to now
-    form.setFieldValue("startTime", now.toISOString().slice(0, 16))
-
-    // Set the end date to 2 hours from now
-    form.setFieldValue("endDate", twoHoursLater.toISOString().slice(0, 16))
-  }, [])
+  // was here for testing but no longer needed as there should be no default date set for airdrop (users should set it)
+  // useEffect(() => {
+  //   const now = new Date()
+  //   const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60000) // 2 hours in milliseconds
+  //   // Set the start time to now
+  //   form.setFieldValue("startTime", now.toISOString().slice(0, 16))
+  //   // Set the end date to 2 hours from now
+  //   form.setFieldValue("endDate", twoHoursLater.toISOString().slice(0, 16))
+  // }, [])
 
   return (
     <div className="flex flex-col items-center w-full max-w-2xl mx-auto p-6 rounded-lg shadow-md">

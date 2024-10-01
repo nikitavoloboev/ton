@@ -9,6 +9,7 @@
     "web"
   ],
   "dependencies": {
+    "date-fns": "^4.1.0",
     "ronin": "^4.3.1"
   },
   "devDependencies": {

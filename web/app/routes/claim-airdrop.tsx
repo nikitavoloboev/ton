@@ -5,6 +5,7 @@ import useBlockchainActions from "../lib/airdrop/useActions"
 import { ClientOnly } from "~/lib/react"
 import { getAirdropsAvailableForClaim, getEntriesForAirdrop } from "~/actions"
 import { Address } from "@ton/core"
+import { formatDistanceToNow } from "date-fns"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
@@ -28,7 +29,7 @@ function RouteComponent() {
           <h2 className="text-2xl font-bold ">Claim Airdrop</h2>
           <TonConnectButton />
         </div>
-        <h1>Airdrops available for claim</h1>
+        <h1 className="mb-4">Airdrops available for claim</h1>
         {data.map((airdrop) => (
           <div key={airdrop.id}>
             <p
@@ -38,7 +39,6 @@ function RouteComponent() {
                   airdropAddress: airdrop.airdropAddress,
                 })
                 console.log(entries, "entries")
-
                 // @ts-ignore
                 const parsedEntries = entries.map((entry) => ({
                   address: Address.parse(entry.walletAddress),
@@ -47,12 +47,10 @@ function RouteComponent() {
                 }))
                 console.log(parsedEntries, "parsedEntries")
                 console.log(airdrop.airdropAddress, "testing..")
-
                 await claimAirdrop({
                   airdropAddress: Address.parse(airdrop.airdropAddress),
                   entries: parsedEntries,
                 })
-
                 // here for ref of what `entries` should look like
                 // const entries = [
                 //   {
@@ -62,7 +60,9 @@ function RouteComponent() {
                 // ]
               }}
             >
-              {airdrop.airdropAddress}
+              Claim before:{" "}
+              <strong>{formatDistanceToNow(new Date(airdrop.endDate))}</strong>{" "}
+              passes
             </p>
           </div>
         ))}

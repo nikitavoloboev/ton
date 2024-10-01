@@ -1,6 +1,10 @@
 [
   {
     "wallet": "0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM",
-    "amount": 12
+    "amount": 15
+  },
+  {
+    "wallet": "0QBQHscaajaQxee8hEsav_gUOCSFCuzhhX19g9hw6ZELMulU",
+    "amount": 15
   }
 ]
