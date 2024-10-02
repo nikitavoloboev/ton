@@ -100,7 +100,12 @@ async function createAirdrop(
       JettonDefaultWallet.fromAddress(
         await jettonMinter.getGetWalletAddress(sender.address!),
       ),
-    )
+    );
+    const amount = entries
+        .map((e) => e.amount)
+        .reduce((a, b) => a + b, BigInt(0));
+    console.log("Amount: ", amount.toString());
+    console.log("entries: ", entries);
 
     await Promise.all([
       airdrop.sendDeploy(
@@ -119,14 +124,12 @@ async function createAirdrop(
         {
           $$type: "TokenTransfer",
           destination: airdrop.address,
-          queryId: BigInt(0),
+          queryId: BigInt(123),
           response_destination: sender.address!,
           forward_ton_amount: toNano("0.01"),
           forward_payload: beginCell().storeBit(1).endCell(),
           custom_payload: beginCell().endCell(),
-          amount: entries
-            .map((e) => e.amount)
-            .reduce((a, b) => a + b, BigInt(0)),
+          amount,
         },
       ),
     ])

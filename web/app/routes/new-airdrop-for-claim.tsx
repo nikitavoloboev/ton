@@ -35,13 +35,14 @@ function RouteComponent() {
     onSubmit: async ({ value }) => {
       try {
         setSubmittedAirdropWalletEntries(value.pairs)
-        const parsedEntries = value.pairs.map((entry) => ({
+        const parsedEntries = value.pairs.filter(e=>!!e.userWallet).map((entry) => ({
           address: Address.parse(entry.userWallet),
           amount: toNano(entry.tokenAmount),
-        }))
+        }));
+
+
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
         const startTime = Math.floor(new Date(value.startTime).getTime() / 1000)
-        console.log("Start time", startTime, "End time", endTime)
         const airdropAddress = await createAirdrop({
           jettonAddress,
           endTime,

@@ -182,6 +182,7 @@ export function useProviderSender(): Sender {
             });
             await new Promise(r => setTimeout(r, 1000));
             if (messageToSend.length) {
+                console.log("sending",messageToSend.length, "messages", ...messageToSend);
                 const messages = messageToSend;
                 messageToSend = [];
                 await tonConnectUI.sendTransaction({
