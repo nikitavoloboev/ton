@@ -9,8 +9,7 @@ import { createAirdropWalletToClaim } from "~/actions"
 import { ClientOnly } from "~/lib/react"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
-
-const jettonAddress = Address.parse(import.meta.env.VITE_MASTER_ADDRESS)
+import { isProduction } from "~/lib/utils"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -19,11 +18,9 @@ function RouteComponent() {
   const { createAirdrop, sendJettonsToAirdrop } = useBlockchainActions()
   const [submittedAirdropWalletEntries, setSubmittedAirdropWalletEntries] =
     useState<{ userWallet: string; tokenAmount: string }[]>([])
-
   const [parsedEntriesSubmitted, setParsedEntriesSubmitted] = useState<
     { address: Address; amount: bigint }[]
   >([])
-
   const [airDropAddress, setAirdropAddress] = useState<Address | null>(null)
 
   const form = useForm({
@@ -31,6 +28,7 @@ function RouteComponent() {
       pairs: [{ userWallet: "", tokenAmount: "" }],
       startTime: "",
       endDate: "",
+      jettonAddress: "",
     },
     onSubmit: async ({ value }) => {
       try {
@@ -45,7 +43,7 @@ function RouteComponent() {
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
         const startTime = Math.floor(new Date(value.startTime).getTime() / 1000)
         const airdropAddress = await createAirdrop({
-          jettonAddress,
+          jettonAddress: Address.parse(value.jettonAddress),
           endTime,
           startTime,
           entries: parsedEntries,
@@ -56,7 +54,7 @@ function RouteComponent() {
           airdropAddress: airdropAddress.toString(),
           startDate: new Date(value.startTime).getTime() / 1000,
           endDate: endTime,
-          jettonAddress: jettonAddress.toString(),
+          jettonAddress: Address.parse(value.jettonAddress).toString(),
           airdropWalletsForClaim: parsedEntries.map((entry, index) => ({
             walletAddress: entry.address.toString(),
             tokenAmount: entry.amount.toString(),
@@ -173,37 +171,59 @@ function RouteComponent() {
           }}
         />
       </div>
-      <div className="w-full mb-4 flex justify-start space-x-4">
-        <label
-          htmlFor="fileInputWithoutFilePicker"
-          className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
-        >
-          Attach JSON file (without file picker)
-        </label>
-        <input
-          id="fileInputWithoutFilePicker"
-          accept=".json"
-          className="hidden"
-          onClick={() => {
-            try {
-              const newPairs = newAirdropForClaimJson.map((pair, index) => ({
-                id: index,
-                wallet: pair.wallet,
-                amount: pair.amount.toString(), // Convert amount to string
-              }))
-              setInputPairs(newPairs)
-              const mappedPairs = newPairs.map((pair) => ({
-                userWallet: pair.wallet,
-                tokenAmount: pair.amount,
-              }))
-              form.setFieldValue("pairs", mappedPairs)
-              console.log("airdropJson parsed successfully:", newPairs)
-            } catch (error) {
-              console.error("Error parsing airdropJson:", error)
-            }
-          }}
-        />
-      </div>
+      {!isProduction && (
+        <div className="w-full mb-4 flex justify-start space-x-4">
+          <label
+            htmlFor="fileInputWithoutFilePicker"
+            className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
+          >
+            Attach JSON file (without file picker)
+          </label>
+          <input
+            id="fileInputWithoutFilePicker"
+            accept=".json"
+            className="hidden"
+            onClick={() => {
+              try {
+                const newPairs = newAirdropForClaimJson.map((pair, index) => ({
+                  id: index,
+                  wallet: pair.wallet,
+                  amount: pair.amount.toString(), // Convert amount to string
+                }))
+                setInputPairs(newPairs)
+                const mappedPairs = newPairs.map((pair) => ({
+                  userWallet: pair.wallet,
+                  tokenAmount: pair.amount,
+                }))
+                form.setFieldValue("pairs", mappedPairs)
+                console.log("airdropJson parsed successfully:", newPairs)
+              } catch (error) {
+                console.error("Error parsing airdropJson:", error)
+              }
+            }}
+          />
+        </div>
+      )}
+
+      <form.Field name="jettonAddress">
+        {(field) => (
+          <label className="flex flex-col w-full mb-4">
+            <span className="mb-1 text-sm font-medium text-gray-700 dark:text-white">
+              Jetton Address
+            </span>
+            <input
+              type="text"
+              value={field.state.value || ""}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="Enter Jetton Address"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                         bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                         placeholder-gray-500 dark:placeholder-gray-400"
+            />
+          </label>
+        )}
+      </form.Field>
 
       <div className="w-full border-b border-gray-300 dark:border-gray-700 mb-6"></div>
       <h3 className="text-xl font-semibold mb-4 w-full text-left">

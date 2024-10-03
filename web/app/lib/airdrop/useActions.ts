@@ -178,7 +178,7 @@ async function sendJettonsToAirdrop(
   ownerWallet.send(
     sender,
     {
-      value: toNano("0.00015"),
+      value: toNano("0.15"),
       bounce: true,
     },
     {

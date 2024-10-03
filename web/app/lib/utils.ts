@@ -21,3 +21,5 @@ export function appendToClipboard(
   }
   clipboard.writeSync(newClipboard)
 }
+
+export const isProduction = process.env.NODE_ENV === "production"
