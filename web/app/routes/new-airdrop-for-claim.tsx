@@ -35,11 +35,12 @@ function RouteComponent() {
     onSubmit: async ({ value }) => {
       try {
         setSubmittedAirdropWalletEntries(value.pairs)
-        const parsedEntries = value.pairs.filter(e=>!!e.userWallet).map((entry) => ({
-          address: Address.parse(entry.userWallet),
-          amount: toNano(entry.tokenAmount),
-        }));
-
+        const parsedEntries = value.pairs
+          .filter((e) => !!e.userWallet)
+          .map((entry) => ({
+            address: Address.parse(entry.userWallet),
+            amount: toNano(entry.tokenAmount),
+          }))
 
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
         const startTime = Math.floor(new Date(value.startTime).getTime() / 1000)
@@ -325,14 +326,15 @@ function RouteComponent() {
             state.values.pairs.some(
               (pair) => pair.userWallet && pair.tokenAmount,
             ),
+            state.values.endDate, // Add this line to get the endDate value
           ]}
         >
-          {([canSubmit, isSubmitting, hasValidPair]) => (
+          {([canSubmit, isSubmitting, hasValidPair, endDate]) => (
             <button
               type="submit"
-              disabled={!canSubmit || !hasValidPair}
+              disabled={!canSubmit || !hasValidPair || !endDate} // Add !endDate condition here
               className={`w-full px-4 py-2 text-white rounded transition-colors ${
-                canSubmit && hasValidPair
+                canSubmit && hasValidPair && endDate
                   ? "bg-blue-500 hover:bg-blue-600"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
