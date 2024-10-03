@@ -100,12 +100,12 @@ async function createAirdrop(
       JettonDefaultWallet.fromAddress(
         await jettonMinter.getGetWalletAddress(sender.address!),
       ),
-    );
+    )
     const amount = entries
-        .map((e) => e.amount)
-        .reduce((a, b) => a + b, BigInt(0));
-    console.log("Amount: ", amount.toString());
-    console.log("entries: ", entries);
+      .map((e) => e.amount)
+      .reduce((a, b) => a + b, BigInt(0))
+    console.log("Amount: ", amount.toString())
+    console.log("entries: ", entries)
 
     await Promise.all([
       airdrop.sendDeploy(
@@ -178,7 +178,7 @@ async function sendJettonsToAirdrop(
   ownerWallet.send(
     sender,
     {
-      value: toNano("0.15"),
+      value: toNano("0.00015"),
       bounce: true,
     },
     {

@@ -326,13 +326,13 @@ function RouteComponent() {
             state.values.pairs.some(
               (pair) => pair.userWallet && pair.tokenAmount,
             ),
-            state.values.endDate, // Add this line to get the endDate value
+            state.values.endDate,
           ]}
         >
           {([canSubmit, isSubmitting, hasValidPair, endDate]) => (
             <button
               type="submit"
-              disabled={!canSubmit || !hasValidPair || !endDate} // Add !endDate condition here
+              disabled={!canSubmit || !hasValidPair || !endDate}
               className={`w-full px-4 py-2 text-white rounded transition-colors ${
                 canSubmit && hasValidPair && endDate
                   ? "bg-blue-500 hover:bg-blue-600"
