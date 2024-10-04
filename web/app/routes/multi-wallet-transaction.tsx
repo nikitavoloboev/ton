@@ -81,21 +81,6 @@ function RouteComponent() {
   )
 }
 
-function useHydrated() {
-  return useSyncExternalStore(
-    () => {
-      return () => {}
-    },
-    () => true,
-    () => false,
-  )
-}
-
-const ClientOnly = ({ children }: React.PropsWithChildren) => {
-  const hydrated = useHydrated()
-  return hydrated ? <>{children}</> : null
-}
-
 export const Route = createFileRoute("/multi-wallet-transaction")({
   component: () => <RouteComponent />,
   ssr: false,
