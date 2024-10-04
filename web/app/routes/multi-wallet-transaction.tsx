@@ -97,9 +97,6 @@ const ClientOnly = ({ children }: React.PropsWithChildren) => {
 }
 
 export const Route = createFileRoute("/multi-wallet-transaction")({
-  component: () => (
-    <ClientOnly>
-      <RouteComponent />
-    </ClientOnly>
-  ),
+  component: () => <RouteComponent />,
+  ssr: false,
 })
