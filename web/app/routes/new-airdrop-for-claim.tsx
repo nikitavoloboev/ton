@@ -125,12 +125,12 @@ function RouteComponent() {
         Helpers
       </h3>
 
-      <div className="w-full mb-4">
+      <div className="w-[50%] mr-auto mb-4">
         <label
           htmlFor="fileInput"
-          className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
+          className="px-4 mr-auto py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 text-left w-[50%] mb-4"
         >
-          Attach JSON file with airdrop details
+          Attach JSON with airdrop details
         </label>
         <input
           id="fileInput"
@@ -171,13 +171,24 @@ function RouteComponent() {
           }}
         />
       </div>
+      <button
+        onClick={() => {
+          form.setFieldValue(
+            "jettonAddress",
+            "EQCXzO7HhoK5fDQuCONE43l8-Qsreq5zq89ZVNhEna24eK-h",
+          )
+        }}
+        className="px-4 mr-auto py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 text-left w-[50%] mb-4"
+      >
+        Enter 🐸 Mainnet Jetton Address
+      </button>
       {!isProduction && (
-        <div className="w-full mb-4 flex justify-start space-x-4">
+        <div className="mb-4 mr-auto w-[50%]">
           <label
             htmlFor="fileInputWithoutFilePicker"
-            className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
+            className="inline-block px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 text-left w-full cursor-pointer"
           >
-            Dev: Load airdrop details from local file
+            Dev: Load airdrop details for testing
           </label>
           <input
             id="fileInputWithoutFilePicker"
