@@ -1,18 +1,17 @@
-import { useMemo } from "react"
 import { Address, beginCell, Cell, Sender, toNano } from "@ton/core"
-import { useTonConnectUI } from "@tonconnect/ui-react"
-import { getProviderSender, tonClient, useProviderSender } from "../ton-sender"
 import { TonClient } from "@ton/ton"
+import { useMemo } from "react"
+import { JettonDefaultWallet } from "../ton-child"
+import { SampleJetton } from "../ton-master"
+import { tonClient, useProviderSender } from "../ton-sender"
 import {
   Airdrop,
   AirdropEntry,
   generateEntriesDictionary,
 } from "./wrappers/Airdrop"
-import { hex as hexAirdropHelper } from "./wrappers/build/AirdropHelper.compiled.json"
-import { hex as hexAirdrop } from "./wrappers/build/Airdrop.compiled.json"
-import { SampleJetton } from "../ton-master"
-import { JettonDefaultWallet } from "../ton-child"
 import { AirdropHelper } from "./wrappers/AirdropHelper"
+import { hex as hexAirdrop } from "./wrappers/build/Airdrop.compiled.json"
+import { hex as hexAirdropHelper } from "./wrappers/build/AirdropHelper.compiled.json"
 
 const helperCode = Cell.fromBoc(Buffer.from(hexAirdropHelper, "hex"))[0]!
 const Code = Cell.fromBoc(Buffer.from(hexAirdrop, "hex"))[0]!

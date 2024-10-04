@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react"
 import { PanelWithTonWallet } from "~/components/PanelWithTonWallet"
 import multiWalletTransactionJson from "../../../data/multi-wallet-transaction.json"
 import useBlockchainActions from "~/lib/airdrop/useActions"
+import { ClientOnly } from "~/lib/react"
 
 function RouteComponent() {
   // const { transactionIntoMultipleWallets } = useBlockchainActions()
@@ -82,6 +83,9 @@ function RouteComponent() {
 }
 
 export const Route = createFileRoute("/multi-wallet-transaction")({
-  component: () => <RouteComponent />,
-  // ssr: false,
+  component: () => (
+    <ClientOnly>
+      <RouteComponent />
+    </ClientOnly>
+  ),
 })
