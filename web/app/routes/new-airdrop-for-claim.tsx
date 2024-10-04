@@ -1,16 +1,15 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
-import { Address, fromNano, toNano } from "@ton/core"
+import { Address, toNano } from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
-import { Trash2 } from "lucide-react"
+import { Info, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { createAirdropWalletToClaim } from "~/actions"
 import { ClientOnly } from "~/lib/react"
+import { isProduction } from "~/lib/utils"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
-import { isProduction } from "~/lib/utils"
-import { Info } from "lucide-react"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -57,6 +56,8 @@ function RouteComponent() {
           startDate: new Date(value.startTime).getTime() / 1000,
           endDate: endTime,
           jettonAddress: Address.parse(value.jettonAddress).toString(),
+          // TODO: do actual check for the mainnet, not this
+          mainnet: isProduction,
           airdropWalletsForClaim: parsedEntries.map((entry, index) => ({
             walletAddress: entry.address.toString(),
             tokenAmount: entry.amount.toString(),

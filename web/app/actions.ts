@@ -10,25 +10,28 @@ export const createAirdropWalletToClaim = createServerFn(
     startDate: number // unix
     endDate: number // unix
     jettonAddress: string
+    mainnet: boolean
     airdropWalletsForClaim: {
       walletAddress: string
       tokenAmount: string
       index: number
     }[]
   }) => {
-    appendToClipboard(data)
+    // appendToClipboard(data)
     const {
       airdropAddress,
       startDate,
       endDate,
       airdropWalletsForClaim,
       jettonAddress,
+      mainnet,
     } = data
     const airdropToClaim = await create.airdropToClaim.with({
       airdropAddress,
       jettonAddress,
       startDate: new Date(startDate * 1000),
       endDate: new Date(endDate * 1000),
+      mainnet,
     })
     if (!airdropToClaim) throw new Error("Failed to create airdrop to claim")
     airdropWalletsForClaim.forEach(async (entry) => {
