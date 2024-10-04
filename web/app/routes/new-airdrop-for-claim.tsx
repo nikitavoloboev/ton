@@ -10,6 +10,7 @@ import { ClientOnly } from "~/lib/react"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
 import useBlockchainActions from "../lib/airdrop/useActions"
 import { isProduction } from "~/lib/utils"
+import { Info } from "lucide-react"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -22,6 +23,7 @@ function RouteComponent() {
     { address: Address; amount: bigint }[]
   >([])
   const [airDropAddress, setAirdropAddress] = useState<Address | null>(null)
+  const [showInfoPopup, setShowInfoPopup] = useState(false)
 
   const form = useForm({
     defaultValues: {
@@ -132,6 +134,30 @@ function RouteComponent() {
         >
           Attach JSON with airdrop details
         </label>
+        <button
+          className="p-2 ml-2 text-gray-500 hover:text-blue-500 transition-colors relative"
+          onClick={() => setShowInfoPopup(!showInfoPopup)}
+        >
+          <Info size={20} />
+          {showInfoPopup && (
+            <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded shadow-lg z-10 w-80">
+              <p className="text-md">Format of JSON should be like this:</p>
+              <pre className="text-xs whitespace-pre-wrap break-words">
+                {/* TODO: make prettier */}
+                <code>
+                  {`
+[
+{
+ "wallet": "0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM",
+ "amount": 15
+}
+ ]
+`}
+                </code>
+              </pre>
+            </div>
+          )}
+        </button>
         <input
           id="fileInput"
           type="file"
