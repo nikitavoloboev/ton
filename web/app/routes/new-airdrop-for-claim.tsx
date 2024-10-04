@@ -122,7 +122,7 @@ function RouteComponent() {
       </div>
       <h3 className="text-xl font-semibold mb-4 w-full text-left">
         {/* TODO: add link to docs that opens and says what format the file must be in */}
-        Load from file
+        Helpers
       </h3>
 
       <div className="w-full mb-4">
@@ -130,7 +130,7 @@ function RouteComponent() {
           htmlFor="fileInput"
           className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
         >
-          Attach JSON file
+          Attach JSON file with airdrop details
         </label>
         <input
           id="fileInput"
@@ -177,7 +177,7 @@ function RouteComponent() {
             htmlFor="fileInputWithoutFilePicker"
             className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
           >
-            Attach JSON file (without file picker)
+            Dev: Load airdrop details from local file
           </label>
           <input
             id="fileInputWithoutFilePicker"
@@ -205,6 +205,10 @@ function RouteComponent() {
         </div>
       )}
 
+      <div className="w-full border-b border-gray-300 dark:border-gray-700 mb-6"></div>
+      <h3 className="text-xl font-semibold mb-4 w-full text-left">
+        Airdrop details
+      </h3>
       <form.Field name="jettonAddress">
         {(field) => (
           <label className="flex flex-col w-full mb-4">
@@ -224,11 +228,6 @@ function RouteComponent() {
           </label>
         )}
       </form.Field>
-
-      <div className="w-full border-b border-gray-300 dark:border-gray-700 mb-6"></div>
-      <h3 className="text-xl font-semibold mb-4 w-full text-left">
-        Or add manually
-      </h3>
       <form
         onSubmit={(e) => {
           e.preventDefault()
