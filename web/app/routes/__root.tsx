@@ -15,6 +15,7 @@ import appCss from "~/styles/app.css?url"
 import { seo } from "~/utils/seo"
 import { TonConnectUIProvider } from "@tonconnect/ui-react"
 import { Toaster } from "react-hot-toast"
+import { isProduction } from "~/lib/utils"
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -114,15 +115,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             Claim Airdrop
           </Link>
           {" | "}
-          <Link
-            to="/multi-wallet-transaction"
-            activeProps={{
-              className: "font-bold",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Multi Wallet Transaction
-          </Link>
+          {!isProduction && (
+            <Link
+              to="/multi-wallet-transaction"
+              activeProps={{
+                className: "font-bold",
+              }}
+              activeOptions={{ exact: true }}
+            >
+              Multi Wallet Transaction
+            </Link>
+          )}
         </div>
         <hr />
         {children}
