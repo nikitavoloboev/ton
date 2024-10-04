@@ -83,5 +83,5 @@ function RouteComponent() {
 
 export const Route = createFileRoute("/multi-wallet-transaction")({
   component: () => <RouteComponent />,
-  ssr: false,
+  // ssr: false,
 })
