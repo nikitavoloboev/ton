@@ -130,7 +130,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <hr />
         {children}
         <ScrollRestoration />
-        <TanStackRouterDevtools position="bottom-right" />
+        {!isProduction && <TanStackRouterDevtools position="bottom-right" />}
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />
       </Body>
