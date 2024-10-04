@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/start"
 import { batch, count, create, get } from "ronin"
-import { appendToClipboard } from "./lib/utils"
+import { appendToClipboard, isProduction } from "./lib/utils"
 import { Address } from "@ton/core"
 
 export const createAirdropWalletToClaim = createServerFn(
@@ -58,6 +58,7 @@ export const getAirdropsAvailableForClaim = createServerFn(
     const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
       walletAddress: properAddress,
       claimed: false,
+      // mainnet: isProduction,
     })
     let airdropsForClaim: any[] = []
     await Promise.all(
