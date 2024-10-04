@@ -30,42 +30,44 @@ function RouteComponent() {
           <h2 className="text-2xl font-bold ">Claim Airdrop</h2>
           <TonConnectButton />
         </div>
-        {data?.map((airdrop) => (
-          <div key={airdrop.id}>
-            <p
-              className="cursor-pointer"
-              onClick={async () => {
-                const entries = await getEntriesForAirdrop({
-                  airdropAddress: airdrop.airdropAddress,
-                })
-                console.log(entries, "entries")
-                // @ts-ignore
-                const parsedEntries = entries.map((entry) => ({
-                  address: Address.parse(entry.walletAddress),
-                  // address: entry.walletAddress,
-                  amount: BigInt(entry.tokenAmount),
-                }))
-                console.log(parsedEntries, "parsedEntries")
-                console.log(airdrop.airdropAddress, "testing..")
-                await claimAirdrop({
-                  airdropAddress: Address.parse(airdrop.airdropAddress),
-                  entries: parsedEntries,
-                })
-                // here for ref of what `entries` should look like
-                // const entries = [
-                //   {
-                //     address: Address.parse("0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM"),
-                //     amount: 200000n,
-                //   },
-                // ]
-              }}
-            >
-              Claim before:{" "}
-              <strong>{formatDistanceToNow(new Date(airdrop.endDate))}</strong>{" "}
-              passes
-            </p>
-          </div>
-        ))}
+        <div className="space-y-4">
+          {data?.map((airdrop) => (
+            <div key={airdrop.id}>
+              <p
+                className={`
+                relative overflow-hidden px-6 py-3 rounded-full
+                bg-gradient-to-r from-purple-500 to-pink-500
+                text-white font-bold text-lg
+                transform transition-all duration-300 ease-in-out cursor-pointer
+              `}
+                onClick={async () => {
+                  const entries = await getEntriesForAirdrop({
+                    airdropAddress: airdrop.airdropAddress,
+                  })
+                  console.log(entries, "entries")
+                  // @ts-ignore
+                  const parsedEntries = entries.map((entry) => ({
+                    address: Address.parse(entry.walletAddress),
+                    // address: entry.walletAddress,
+                    amount: BigInt(entry.tokenAmount),
+                  }))
+                  console.log(parsedEntries, "parsedEntries")
+                  console.log(airdrop.airdropAddress, "testing..")
+                  await claimAirdrop({
+                    airdropAddress: Address.parse(airdrop.airdropAddress),
+                    entries: parsedEntries,
+                  })
+                }}
+              >
+                Claim before:{" "}
+                <strong>
+                  {formatDistanceToNow(new Date(airdrop.endDate))}
+                </strong>{" "}
+                passes
+              </p>
+            </div>
+          ))}
+        </div>
         {/* <button
           onClick={() => {
             // claimAirdrop({ airdropAddress: airDropAddress, entries })

@@ -114,7 +114,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           >
             Claim Airdrop
           </Link>
-          {/* {" | "} */}
+          {/* TODO: hide this too in prod.. */}
+          {" | "}
           {!isProduction && (
             <Link
               to="/multi-wallet-transaction"
