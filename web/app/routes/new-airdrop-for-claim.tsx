@@ -242,6 +242,21 @@ function RouteComponent() {
           />
         </div>
       )}
+      {!isProduction && (
+        <div className="mb-4 mr-auto w-[50%]">
+          <button
+            className="inline-block px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 text-left w-full cursor-pointer"
+            onClick={() => {
+              form.setFieldValue(
+                "jettonAddress",
+                "kQC6cYfMFYFur2IgJroc3wBxg-q4hOxsqGQwEYSEARxtOmZf",
+              )
+            }}
+          >
+            Dev: Enter LOM Jetton Address
+          </button>
+        </div>
+      )}
 
       <div className="w-full border-b border-gray-300 dark:border-gray-700 mb-6"></div>
       <h3 className="text-xl font-semibold mb-4 w-full text-left">
