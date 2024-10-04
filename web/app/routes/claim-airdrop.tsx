@@ -3,9 +3,14 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Address } from "@ton/core"
 import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import { formatDistanceToNow } from "date-fns"
-import { getAirdropsAvailableForClaim, getEntriesForAirdrop } from "~/actions"
+import {
+  getAirdropsAvailableForClaim,
+  getEntriesForAirdrop,
+  setAirdropWalletForClaimAsClaimed,
+} from "~/actions"
 import { ClientOnly } from "~/lib/react"
 import useBlockchainActions from "../lib/airdrop/useActions"
+import { set } from "ronin"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
@@ -41,26 +46,57 @@ function RouteComponent() {
                 transform transition-all duration-300 ease-in-out cursor-pointer
               `}
                 onClick={async () => {
-                  const entries = await getEntriesForAirdrop({
-                    airdropAddress: airdrop.airdropAddress,
-                  })
-                  console.log(entries, "entries")
-                  // @ts-ignore
-                  const parsedEntries = entries.map((entry) => ({
-                    address: Address.parse(entry.walletAddress),
-                    // address: entry.walletAddress,
-                    amount: BigInt(entry.tokenAmount),
-                  }))
-                  console.log(parsedEntries, "parsedEntries")
-                  console.log(airdrop.airdropAddress, "testing..")
-                  await claimAirdrop({
-                    airdropAddress: Address.parse(airdrop.airdropAddress),
-                    entries: parsedEntries,
-                  })
+                  try {
+                    const entries = await getEntriesForAirdrop({
+                      airdropAddress: airdrop.airdropAddress,
+                    })
+                    console.log(entries, "entries")
+                    // @ts-ignore
+                    const parsedEntries = entries.map((entry) => ({
+                      address: Address.parse(entry.walletAddress),
+                      amount: BigInt(entry.tokenAmount),
+                    }))
+                    console.log(parsedEntries, "parsedEntries")
+                    console.log(airdrop.airdropAddress, "testing..")
+                    await claimAirdrop({
+                      airdropAddress: Address.parse(airdrop.airdropAddress),
+                      entries: parsedEntries,
+                    })
+                    await fetch(
+                      "http://localhost:8787/set-airdrop-wallet-for-claim-as-claimed",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          airdropAddress: airdrop.airdropAddress,
+                          walletAddress: address,
+                          // @ts-ignore
+                          entries: entries.map((entry) => ({
+                            address: entry.walletAddress,
+                            amount: entry.tokenAmount.toString(),
+                          })),
+                        }),
+                      },
+                    )
+                    // await setAirdropWalletForClaimAsClaimed({
+                    //   airdropAddress: airdrop.airdropAddress.toString(),
+                    //   walletAddress: address,
+                    //   // @ts-ignore
+                    //   entries: entries?.map((entry) => ({
+                    //     address: entry.walletAddress,
+                    //     amount: entry.tokenAmount,
+                    //   })),
+                    // })
+                  } catch (err) {
+                    console.log(err, "err")
+                  }
                 }}
               >
                 Claim before:{" "}
                 <strong>
+                  {/* @ts-ignore */}
                   {formatDistanceToNow(new Date(airdrop.endDate))}
                 </strong>{" "}
                 passes

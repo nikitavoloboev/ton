@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/start"
-import { batch, count, create, get } from "ronin"
+import { batch, count, create, get, set } from "ronin"
 import { appendToClipboard, isProduction } from "./lib/utils"
 import { Address } from "@ton/core"
+import { AirdropToClaim, AirdropWalletForClaim } from "@ronin/drophunt"
+import useBlockchainActions from "./lib/airdrop/useActions"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",
@@ -58,20 +60,65 @@ export const getAirdropsAvailableForClaim = createServerFn(
     const airdropWalletsForClaim = await get.airdropWalletsForClaim.with({
       walletAddress: properAddress,
       claimed: false,
-      // mainnet: isProduction,
     })
-    let airdropsForClaim: any[] = []
+    let airdropsForClaim: AirdropToClaim[] = []
     await Promise.all(
       airdropWalletsForClaim.map(async (airdrop) => {
         const airdropToClaim = await get.airdropToClaim.with({
           id: airdrop.airdropToClaim,
         })
+        if (!airdropToClaim) return
         airdropsForClaim.push(airdropToClaim)
       }),
     )
     return airdropsForClaim.filter(
-      (airdrop) => new Date(airdrop.endDate) > currentDate,
+      (airdrop) =>
+        airdrop.mainnet === isProduction &&
+        new Date(airdrop.endDate) > currentDate,
     )
+  },
+)
+
+export const setAirdropWalletForClaimAsClaimed = createServerFn(
+  "POST",
+  async (data: {
+    airdropAddress: string
+    walletAddress: string
+    entries: {
+      address: string
+      amount: string
+    }[]
+  }) => {
+    try {
+      const { airdropAddress, walletAddress, entries } = data
+      console.log("doing request")
+      const { isUserClaimedAirdrop } = useBlockchainActions()
+      await new Promise((resolve) => setTimeout(resolve, 10000))
+      console.log("running")
+      if (
+        await isUserClaimedAirdrop(
+          Address.parse(airdropAddress),
+          entries.map((entry) => ({
+            address: Address.parse(entry.address),
+            amount: BigInt(entry.amount),
+          })),
+        )
+      ) {
+        console.log("do thing")
+        await set.airdropWalletsForClaim({
+          with: {
+            airdropToClaim: airdropAddress,
+            walletAddress,
+          },
+          to: {
+            claimed: true,
+          },
+        })
+      }
+      console.log("failed..")
+    } catch (err) {
+      console.log(err, "err")
+    }
   },
 )
 
