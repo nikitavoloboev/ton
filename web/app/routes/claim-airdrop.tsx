@@ -1,22 +1,23 @@
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
-import useBlockchainActions from "../lib/airdrop/useActions"
-import { ClientOnly } from "~/lib/react"
-import { getAirdropsAvailableForClaim, getEntriesForAirdrop } from "~/actions"
 import { Address } from "@ton/core"
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
 import { formatDistanceToNow } from "date-fns"
+import { getAirdropsAvailableForClaim, getEntriesForAirdrop } from "~/actions"
+import { ClientOnly } from "~/lib/react"
+import useBlockchainActions from "../lib/airdrop/useActions"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
   const address = useTonAddress()
 
-  const { data, error, isLoading } = useSuspenseQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["claim-airdrop", address],
     queryFn: async () => {
       const res = await getAirdropsAvailableForClaim({ address })
       return res
     },
+    enabled: !!address,
   })
 
   if (isLoading) return <div>Loading...</div>
@@ -29,8 +30,7 @@ function RouteComponent() {
           <h2 className="text-2xl font-bold ">Claim Airdrop</h2>
           <TonConnectButton />
         </div>
-        <h1 className="mb-4">Airdrops available for claim</h1>
-        {data.map((airdrop) => (
+        {data?.map((airdrop) => (
           <div key={airdrop.id}>
             <p
               className="cursor-pointer"
