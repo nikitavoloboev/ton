@@ -1,10 +1,9 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
-import { useState, useSyncExternalStore } from "react"
+import { useState } from "react"
 import { PanelWithTonWallet } from "~/components/PanelWithTonWallet"
-import multiWalletTransactionJson from "../../../data/multi-wallet-transaction.json"
-import useBlockchainActions from "~/lib/airdrop/useActions"
 import { ClientOnly } from "~/lib/react"
+import multiWalletTransactionJson from "../../../data/multi-wallet-transaction.json"
 
 function RouteComponent() {
   // const { transactionIntoMultipleWallets } = useBlockchainActions()
@@ -31,6 +30,7 @@ function RouteComponent() {
   return (
     <>
       <PanelWithTonWallet header="Multi Wallet Transaction">
+        <h3 className="text-xl font-semibold mb-4 w-full text-left">Helpers</h3>
         <button
           className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
           onClick={() => {
