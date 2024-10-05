@@ -7,7 +7,7 @@ import multiWalletTransactionJson from "../../../data/multi-wallet-transaction.j
 
 function RouteComponent() {
   // const { transactionIntoMultipleWallets } = useBlockchainActions()
-  // TODO: add when `multi wallet tx` from button works
+
   const [walletsForSplit, setWalletsForSplit] = useState<
     {
       walletAddress: string
@@ -31,6 +31,7 @@ function RouteComponent() {
     <>
       <PanelWithTonWallet header="Multi Wallet Transaction">
         <h3 className="text-xl font-semibold mb-4 w-full text-left">Helpers</h3>
+        <button onClick={() => {}}>Set 4 wallets with 25% each split</button>
         <button
           className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
           onClick={() => {
@@ -46,7 +47,17 @@ function RouteComponent() {
         >
           Do Multi Wallet Transaction for 0.01 TON
         </button>
-        {/* <div className="w-full mb-4 flex justify-start space-x-4">
+      </PanelWithTonWallet>
+    </>
+  )
+}
+
+export const Route = createFileRoute("/multi-wallet-transaction")({
+  component: () => <RouteComponent />,
+})
+
+{
+  /* <div className="w-full mb-4 flex justify-start space-x-4">
           <label
             htmlFor="fileInputWithoutFilePicker"
             className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors"
@@ -76,16 +87,5 @@ function RouteComponent() {
               }
             }}
           />
-        </div> */}
-      </PanelWithTonWallet>
-    </>
-  )
+        </div> */
 }
-
-export const Route = createFileRoute("/multi-wallet-transaction")({
-  component: () => (
-    <ClientOnly>
-      <RouteComponent />
-    </ClientOnly>
-  ),
-})
