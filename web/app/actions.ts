@@ -1,9 +1,9 @@
+import { AirdropToClaim } from "@ronin/ton"
 import { createServerFn } from "@tanstack/start"
-import { batch, count, create, get, set } from "ronin"
-import { appendToClipboard, isProduction } from "./lib/utils"
 import { Address } from "@ton/core"
-import { AirdropToClaim, AirdropWalletForClaim } from "@ronin/drophunt"
+import { create, get, set } from "ronin"
 import useBlockchainActions from "./lib/airdrop/useActions"
+import { isProduction } from "./lib/utils"
 
 export const createAirdropWalletToClaim = createServerFn(
   "POST",

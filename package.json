@@ -11,10 +11,10 @@
   "dependencies": {
     "ronin": "^4.3.1"
   },
-  "devDependencies": {
-    "@ronin/drophunt": "^0.0.0-3455975186597"
-  },
   "prettier": {
     "semi": false
+  },
+  "devDependencies": {
+    "@ronin/ton": "^0.0.0-3455940263762"
   }
 }
