@@ -37,15 +37,16 @@ export const createAirdropWalletToClaim = createServerFn(
     })
     if (!airdropToClaim) throw new Error("Failed to create airdrop to claim")
     airdropWalletsForClaim.forEach(async (entry) => {
-      console.log(entry, "entry")
+      console.log(entry, "adding entry")
       const { walletAddress, tokenAmount, index } = entry
-      await create.airdropWalletForClaim.with({
+      const res = await create.airdropWalletForClaim.with({
         airdropToClaim: airdropToClaim.id,
         walletAddress,
         tokenAmount,
         indexNumber: index,
         claimed: false,
       })
+      console.log(res, "res")
     })
     console.log(airdropToClaim)
   },
