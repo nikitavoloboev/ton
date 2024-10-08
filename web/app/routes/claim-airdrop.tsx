@@ -26,7 +26,7 @@ function RouteComponent() {
   })
 
   if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error loading airdrop data</div>
+  if (error) return <div>Error loading data</div>
 
   return (
     <>
