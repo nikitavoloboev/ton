@@ -10,6 +10,7 @@ import { ClientOnly } from "~/lib/react"
 import { isProduction } from "~/lib/utils"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
 import useBlockchainActions, { toNanoDigits } from "../lib/airdrop/useActions"
+// import { Api } from "@ton-api/client"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -36,8 +37,9 @@ function RouteComponent() {
         setSubmittedAirdropWalletEntries(value.pairs)
         const digits = "9"
 
-        // TODO: call from tonapi..
+        // const tonapi = new Api(httpClient)
 
+        // TODO: call from tonapi..
         // const digitsForToken = await getJettonData({
         //   jettonAddress: Address.parse(value.jettonAddress),
         // })
