@@ -9,7 +9,7 @@ import { createAirdropWalletToClaim } from "~/actions"
 import { ClientOnly } from "~/lib/react"
 import { isProduction } from "~/lib/utils"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
-import useBlockchainActions from "../lib/airdrop/useActions"
+import useBlockchainActions, { toNanoDigits } from "../lib/airdrop/useActions"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -34,11 +34,19 @@ function RouteComponent() {
     onSubmit: async ({ value }) => {
       try {
         setSubmittedAirdropWalletEntries(value.pairs)
+        const digits = "9"
+
+        // TODO: call from tonapi..
+
+        // const digitsForToken = await getJettonData({
+        //   jettonAddress: Address.parse(value.jettonAddress),
+        // })
+
         const parsedEntries = value.pairs
           .filter((e) => !!e.userWallet)
           .map((entry) => ({
             address: Address.parse(entry.userWallet),
-            amount: toNano(entry.tokenAmount),
+            amount: toNanoDigits(entry.tokenAmount, Number(digits)),
           }))
 
         const endTime = Math.floor(new Date(value.endDate).getTime() / 1000)
@@ -49,6 +57,7 @@ function RouteComponent() {
           startTime,
           entries: parsedEntries,
         })
+
         setAirdropAddress(airdropAddress)
         setParsedEntriesSubmitted(parsedEntries)
         await createAirdropWalletToClaim({
@@ -60,6 +69,7 @@ function RouteComponent() {
           mainnet: isProduction,
           airdropWalletsForClaim: parsedEntries.map((entry, index) => ({
             walletAddress: entry.address.toString(),
+            // tokenAmount: entry.amount.toString(),
             tokenAmount: entry.amount.toString(),
             index,
           })),
