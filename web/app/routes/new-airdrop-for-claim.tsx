@@ -1,16 +1,15 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
-import { Address, toNano } from "@ton/core"
+import { Address } from "@ton/core"
 import { TonConnectButton } from "@tonconnect/ui-react"
 import { Info, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { createAirdropWalletToClaim } from "~/actions"
-import { ClientOnly } from "~/lib/react"
 import { isProduction } from "~/lib/utils"
 import newAirdropForClaimJson from "../../../data/new-airdrop-for-claim.json"
 import useBlockchainActions, { toNanoDigits } from "../lib/airdrop/useActions"
-// import { Api } from "@ton-api/client"
+import { Api } from "@ton-api/client"
 
 function RouteComponent() {
   const [inputPairs, setInputPairs] = useState<
@@ -37,7 +36,7 @@ function RouteComponent() {
         setSubmittedAirdropWalletEntries(value.pairs)
         const digits = "9"
 
-        // const tonapi = new Api(httpClient)
+        // const tonapi = new Api()
 
         // TODO: call from tonapi..
         // const digitsForToken = await getJettonData({
