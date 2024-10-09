@@ -9,7 +9,7 @@ import {
   setAirdropWalletForClaimAsClaimed,
 } from "~/actions"
 import { ClientOnly } from "~/lib/react"
-import useBlockchainActions from "../lib/airdrop/useActions"
+import useBlockchainActions, {toNanoDigits} from "../lib/airdrop/useActions"
 import { set } from "ronin"
 
 function RouteComponent() {
@@ -54,8 +54,9 @@ function RouteComponent() {
                     // @ts-ignore
                     const parsedEntries = entries.map((entry) => ({
                       address: Address.parse(entry.walletAddress),
-                      amount: BigInt(entry.tokenAmount),
+                      amount: BigInt(entry.tokenAmount)//, +airdrop.digits),
                     }))
+
                     console.log(parsedEntries, "parsedEntries")
                     console.log(airdrop.airdropAddress, "testing..")
                     await claimAirdrop({
