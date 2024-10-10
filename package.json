@@ -15,6 +15,6 @@
     "semi": false
   },
   "devDependencies": {
-    "@ronin/ton": "^0.0.0-3455940263762"
+    "@ronin/ton": "^0.0.0-3456273602742"
   }
 }
