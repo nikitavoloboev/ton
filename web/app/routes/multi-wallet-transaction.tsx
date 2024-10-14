@@ -4,8 +4,11 @@ import { useState } from "react"
 import { PanelWithTonWallet } from "~/components/PanelWithTonWallet"
 import multiWalletTransactionJson from "../../../data/multi-wallet-transaction.json"
 import { Trash2 } from "lucide-react"
+import { useProviderSender } from "~/lib/ton-sender"
+import { Address, toNano } from "@ton/core"
 
 function RouteComponent() {
+  const sender = useProviderSender()
   const [walletsForSplit, setWalletsForSplit] = useState<
     {
       walletAddress: string
@@ -127,6 +130,29 @@ function RouteComponent() {
           }}
         >
           Do Multi Wallet Transaction for 0.01 TON
+        </button>
+        <button
+          className={`inline-block px-4 py-2 text-black rounded transition-colors`}
+          onClick={async () => {
+            const addresses = [
+              "0QBg74IjuUYh2YiE87zzdHzf_E_XgscFKfmtZGFLOBkMNGgM",
+              "0QCWmH6cEB1YgCSeMFZCBKEitaUWr3wwZt9OBLuGup0s8GnX",
+              "0QCWmH6cEB1YgCSeMFZCBKEitaUWr3wwZt9OBLuGup0s8GnX",
+              "0QCWmH6cEB1YgCSeMFZCBKEitaUWr3wwZt9OBLuGup0s8GnX",
+              "0QCWmH6cEB1YgCSeMFZCBKEitaUWr3wwZt9OBLuGup0s8GnX",
+            ]
+            const res = await Promise.all(
+              addresses.map((address) => {
+                return sender.send({
+                  to: Address.parse(address),
+                  value: toNano(0.05),
+                })
+              }),
+            )
+            console.log(res)
+          }}
+        >
+          Do Multi Wallet Transaction for 0.01 5$ USDT into 5 wallets
         </button>
       </PanelWithTonWallet>
     </>
