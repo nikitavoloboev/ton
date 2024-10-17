@@ -9,7 +9,7 @@ import {
   setAirdropWalletForClaimAsClaimed,
 } from "~/actions"
 import { ClientOnly } from "~/lib/react"
-import useBlockchainActions, { toNanoDigits } from "../lib/airdrop/useActions"
+import useBlockchainActions, {fromNanoDigits, toNanoDigits} from "../lib/airdrop/useActions"
 import { set } from "ronin"
 
 function RouteComponent() {
@@ -104,7 +104,7 @@ function RouteComponent() {
                 }
               }}
             >
-              Claim {airdrop.jettonName} before {/* @ts-ignore */}
+              Claim {fromNanoDigits(BigInt(airdrop.userAmount), +airdrop.digits)} {airdrop.jettonName} before {/* @ts-ignore */}
               {formatDistanceToNow(new Date(airdrop.endDate))}
             </p>
           </div>

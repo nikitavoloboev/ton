@@ -71,14 +71,14 @@ export const getAirdropsAvailableForClaim = createServerFn(
       walletAddress: properAddress,
       claimed: false,
     })
-    let airdropsForClaim: AirdropToClaim[] = []
+    let airdropsForClaim: (AirdropToClaim&{userAmount: string})[] = []
     await Promise.all(
       airdropWalletsForClaim.map(async (airdrop) => {
         const airdropToClaim = await get.airdropToClaim.with({
           id: airdrop.airdropToClaim,
         })
-        if (!airdropToClaim) return
-        airdropsForClaim.push(airdropToClaim)
+        if (!airdropToClaim) return;
+        airdropsForClaim.push({...airdropToClaim, userAmount: airdrop.tokenAmount})
       }),
     )
     return airdropsForClaim.filter(
