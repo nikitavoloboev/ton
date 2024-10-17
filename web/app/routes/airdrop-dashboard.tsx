@@ -1,7 +1,21 @@
+import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
-import { TonConnectButton } from "@tonconnect/ui-react"
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react"
+import { getAidropsDashboard } from "~/actions"
 
 function RouteComponent() {
+  const address = useTonAddress()
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["airdrop-dashboard"],
+    queryFn: async () => {
+      const res = await getAidropsDashboard({ ownerAddress: address })
+      console.log(res, "res")
+      return res
+    },
+    enabled: !!address,
+  })
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error loading data</div>
   return (
     <>
       <div className="flex flex-col items-center w-full max-w-2xl mx-auto p-6 rounded-lg shadow-md">
@@ -12,6 +26,13 @@ function RouteComponent() {
           </div>
           <TonConnectButton />
         </div>
+
+        <ul className="w-full mt-6 space-y-4">
+          <li className="p-4 bg-gray-100 rounded-md">
+            <p className="text-lg font-semibold">Airdrop for 100 TON</p>
+            <p className="text-sm text-gray-600">Ends in 4 days, 2/5 claimed</p>
+          </li>
+        </ul>
       </div>
     </>
   )
