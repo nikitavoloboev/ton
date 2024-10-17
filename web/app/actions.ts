@@ -2,8 +2,10 @@ import {AirdropToClaim} from "@ronin/ton"
 import {createServerFn} from "@tanstack/start"
 import {Address} from "@ton/core"
 import {create, get, set} from "ronin"
-import useBlockchainActions from "./lib/airdrop/useActions"
 import {isProduction} from "./lib/utils"
+import {TonClient} from "@ton/ton";
+import {Airdrop, AirdropEntry, generateEntriesDictionary} from "~/lib/airdrop/wrappers/Airdrop";
+import {AirdropHelper} from "~/lib/airdrop/wrappers/AirdropHelper";
 
 export const createAirdropWalletToClaim = createServerFn(
     "POST",
@@ -105,10 +107,9 @@ export const setAirdropWalletForClaimAsClaimed = createServerFn(
     }) => {
         try {
             const {airdropAddress, walletAddress, entries} = data
-            const {isUserClaimedAirdrop} = useBlockchainActions()
-            await new Promise((resolve) => setTimeout(resolve, 50000))
             if (
                 await isUserClaimedAirdrop(
+                    Address.parse(walletAddress),
                     Address.parse(airdropAddress),
                     entries.map((entry) => ({
                         address: Address.parse(entry.address),
@@ -116,18 +117,25 @@ export const setAirdropWalletForClaimAsClaimed = createServerFn(
                     })),
                 )
             ) {
+                const airdrop = await get.airdropToClaim.with({
+                    airdropAddress,
+                });
+                if(!airdrop) throw new Error("Airdrop not found")
+                console.warn("Wallet address", walletAddress, "already claimed")
                 await set.airdropWalletsForClaim({
                     with: {
-                        airdropToClaim: airdropAddress,
-                        walletAddress,
+                        airdropToClaim: airdrop.id,
+                        walletAddress: Address.parse(walletAddress).toString(),
                     },
                     to: {
                         claimed: true,
                     },
                 })
             }
+            return {error: false}
         } catch (err) {
             console.log(err, "err")
+            return {error: true}
         }
     },
 )
@@ -154,16 +162,21 @@ export const getAidropsDashboard = createServerFn(
             //TODO: add endDate < currentDate
             ownerAddress
         });
-        addresses = addresses.filter(e => +e.endDate < +new Date());
+        addresses = addresses.filter(e => e.endDate.getTime() > new Date().getTime());
+        console.log(addresses.length, "addresses", addresses[0].endDate)
         const data = await Promise.all(
             addresses.map(async airdrop => {
                 const walletForCurrAirdrop = await get.airdropWalletsForClaim.with({
                     airdropToClaim: airdrop.id,
                 });
-
+                const sumAmount = walletForCurrAirdrop.map(e => e.tokenAmount).reduce(
+                    (acc, curr) => BigInt(acc) + BigInt(curr),
+                    BigInt(0)
+                );
                 return {
-                    success: walletForCurrAirdrop.filter(e => e.claimed).length,
+                    claimed: walletForCurrAirdrop.filter(e => e.claimed).length,
                     total: walletForCurrAirdrop.length,
+                    totalAmount: sumAmount.toString(),
                     ...airdrop
                 }
             })
@@ -171,3 +184,39 @@ export const getAidropsDashboard = createServerFn(
         return data;
     }
 )
+
+
+
+//TODO: move to other file
+async function isUserClaimedAirdrop(
+    owner: Address,
+    airdropAddress: Address,
+    airdropWallets: AirdropEntry[],
+): Promise<boolean> {
+    const dict = generateEntriesDictionary(airdropWallets)
+    const index = airdropWallets.findIndex((e) =>
+        e.address.equals(owner!),
+    )
+    if (index === -1) throw new Error("You are not in the airdrop list")
+    const airdrop = tonClient.open(Airdrop.createFromAddress(airdropAddress))
+    const { helperCode } = await airdrop.getContractData()
+    const proof = dict.generateMerkleProof([BigInt(index)])
+    const helper = tonClient.open(
+        AirdropHelper.createFromConfig(
+            {
+                airdrop: airdropAddress,
+                index: BigInt(index),
+                proofHash: proof.hash(),
+            },
+            helperCode,
+        ),
+    );
+
+    return await helper.getClaimed()
+}
+export const tonClient = new TonClient({
+    // @ts-ignore
+    endpoint: import.meta.env.VITE_ENDPOINT!,
+    // @ts-ignore
+    apiKey: import.meta.env.VITE_ENDPOINT_API_KEY!,
+})

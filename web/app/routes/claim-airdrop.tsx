@@ -11,7 +11,7 @@ import {
 import useBlockchainActions, { fromNanoDigits } from "../lib/airdrop/useActions"
 
 function RouteComponent() {
-  const { claimAirdrop } = useBlockchainActions()
+  const { claimAirdrop, isUserClaimedAirdrop } = useBlockchainActions()
   const address = useTonAddress()
   const { data, error, isLoading } = useQuery({
     queryKey: ["claim-airdrop", address],
@@ -59,6 +59,20 @@ function RouteComponent() {
                     address: Address.parse(entry.walletAddress),
                     amount: BigInt(entry.tokenAmount), //, +airdrop.digits),
                   }))
+                  if(await isUserClaimedAirdrop(Address.parse(airdrop.airdropAddress), parsedEntries)) {
+                    console.warn("Already claimed");
+                    await setAirdropWalletForClaimAsClaimed({
+                      airdropAddress: airdrop.airdropAddress.toString(),
+                      walletAddress: address,
+                      // @ts-ignore
+                      entries: entries?.map((entry) => ({
+                        address: entry.walletAddress,
+                        amount: entry.tokenAmount,
+                      })),
+                    });
+                    //TODO: hide airdrop from interface
+                    return;
+                  }
 
                   console.log(parsedEntries, "parsedEntries")
                   console.log(airdrop.airdropAddress, "testing..")
@@ -66,24 +80,9 @@ function RouteComponent() {
                     airdropAddress: Address.parse(airdrop.airdropAddress),
                     entries: parsedEntries,
                   })
-                  await fetch(
-                    "http://localhost:8787/set-airdrop-wallet-for-claim-as-claimed",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        airdropAddress: airdrop.airdropAddress,
-                        walletAddress: address,
-                        // @ts-ignore
-                        entries: entries.map((entry) => ({
-                          address: entry.walletAddress,
-                          amount: entry.tokenAmount.toString(),
-                        })),
-                      }),
-                    },
-                  )
+                  //TODO: show loader
+                  await new Promise(e=>setTimeout(e, 50_000));
+
                   // ..
                   const res = await setAirdropWalletForClaimAsClaimed({
                     airdropAddress: airdrop.airdropAddress.toString(),
@@ -94,7 +93,9 @@ function RouteComponent() {
                       amount: entry.tokenAmount,
                     })),
                   })
-                  // ..
+                  //TODO: hide loader
+                  //TODO: hide airdrop from interface
+
                 } catch (err) {
                   console.log(err, "err")
                 }
