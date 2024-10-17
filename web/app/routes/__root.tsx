@@ -114,19 +114,26 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           >
             Claim Airdrop
           </Link>
-          {/* TODO: hide this too in prod.. */}
           {" | "}
-          {!isProduction && (
-            <Link
-              to="/multi-wallet-transaction"
-              activeProps={{
-                className: "font-bold",
-              }}
-              activeOptions={{ exact: true }}
-            >
-              Multi Wallet Transaction
-            </Link>
-          )}
+          <Link
+            to="/airdrop-dashboard"
+            activeProps={{
+              className: "font-bold",
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Airdrop Dashboard
+          </Link>
+          {" | "}
+          <Link
+            to="/multi-wallet-transaction"
+            activeProps={{
+              className: "font-bold",
+            }}
+            activeOptions={{ exact: true }}
+          >
+            Multi Wallet Transaction
+          </Link>
         </div>
         <hr />
         {children}

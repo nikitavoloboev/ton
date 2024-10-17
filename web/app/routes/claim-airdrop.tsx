@@ -8,14 +8,11 @@ import {
   getEntriesForAirdrop,
   setAirdropWalletForClaimAsClaimed,
 } from "~/actions"
-import { ClientOnly } from "~/lib/react"
-import useBlockchainActions, {fromNanoDigits, toNanoDigits} from "../lib/airdrop/useActions"
-import { set } from "ronin"
+import useBlockchainActions, { fromNanoDigits } from "../lib/airdrop/useActions"
 
 function RouteComponent() {
   const { claimAirdrop } = useBlockchainActions()
   const address = useTonAddress()
-
   const { data, error, isLoading } = useQuery({
     queryKey: ["claim-airdrop", address],
     queryFn: async () => {
@@ -24,7 +21,6 @@ function RouteComponent() {
     },
     enabled: !!address,
   })
-
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading data</div>
 
@@ -104,19 +100,13 @@ function RouteComponent() {
                 }
               }}
             >
-              Claim {fromNanoDigits(BigInt(airdrop.userAmount), +airdrop.digits)} {airdrop.jettonName} before {/* @ts-ignore */}
+              Claim{" "}
+              {fromNanoDigits(BigInt(airdrop.userAmount), +airdrop.digits)}{" "}
+              {airdrop.jettonName} before {/* @ts-ignore */}
               {formatDistanceToNow(new Date(airdrop.endDate))}
             </p>
           </div>
         ))}
-        {/* <button
-          onClick={() => {
-            // claimAirdrop({ airdropAddress: airDropAddress, entries })
-          }}
-          className={`w-full px-4 py-2 text-white rounded transition-colors bg-blue-500 hover:bg-blue-600 `}
-        >
-          Claim Airdrop
-        </button> */}
       </div>
     </>
   )
