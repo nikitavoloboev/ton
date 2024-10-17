@@ -28,9 +28,13 @@ function RouteComponent() {
         </div>
 
         <ul className="w-full mt-6 space-y-4">
-          <li className="p-4 bg-gray-100 rounded-md">
-            <p className="text-lg font-semibold">Airdrop for 100 TON</p>
-            <p className="text-sm text-gray-600">Ends in 4 days, 2/5 claimed</p>
+          <li className="p-4 bg-gray-100 dark:bg-gray-800 rounded-md">
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              Airdrop for 100 TON
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Ends in 4 days, 2/5 claimed
+            </p>
           </li>
         </ul>
       </div>
