@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form"
 import { createFileRoute } from "@tanstack/react-router"
 import { Address } from "@ton/core"
-import { TonConnectButton } from "@tonconnect/ui-react"
+import {TonConnectButton, useTonAddress} from "@tonconnect/ui-react"
 import { Info, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -23,7 +23,7 @@ function RouteComponent() {
   >([])
   const [airDropAddress, setAirdropAddress] = useState<Address | null>(null)
   const [showInfoPopup, setShowInfoPopup] = useState(false)
-
+  const myAddress = useTonAddress();
   const form = useForm({
     defaultValues: {
       pairs: [{ userWallet: "", tokenAmount: "" }],
@@ -83,6 +83,7 @@ function RouteComponent() {
             image: image!,
             title,
           },
+          creatorAddress: myAddress
         })
         toast.success("Airdrop created successfully")
       } catch (error) {
