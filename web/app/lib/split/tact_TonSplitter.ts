@@ -570,39 +570,84 @@ function dictValueParserChangeOwnerOk(): DictionaryValue<ChangeOwnerOk> {
     }
 }
 
+export type COINS = {
+    $$type: 'COINS';
+    amount: bigint;
+}
+
+export function storeCOINS(src: COINS) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeCoins(src.amount);
+    };
+}
+
+export function loadCOINS(slice: Slice) {
+    let sc_0 = slice;
+    let _amount = sc_0.loadCoins();
+    return { $$type: 'COINS' as const, amount: _amount };
+}
+
+function loadTupleCOINS(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    return { $$type: 'COINS' as const, amount: _amount };
+}
+
+function loadGetterTupleCOINS(source: TupleReader) {
+    let _amount = source.readBigNumber();
+    return { $$type: 'COINS' as const, amount: _amount };
+}
+
+function storeTupleCOINS(source: COINS) {
+    let builder = new TupleBuilder();
+    builder.writeNumber(source.amount);
+    return builder.build();
+}
+
+function dictValueParserCOINS(): DictionaryValue<COINS> {
+    return {
+        serialize: (src, builder) => {
+            builder.storeRef(beginCell().store(storeCOINS(src)).endCell());
+        },
+        parse: (src) => {
+            return loadCOINS(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type SplitTons = {
     $$type: 'SplitTons';
-    to: Dictionary<bigint, Address>;
+    to: Dictionary<Address, COINS>;
 }
 
 export function storeSplitTons(src: SplitTons) {
     return (builder: Builder) => {
         let b_0 = builder;
-        b_0.storeUint(1525380688, 32);
-        b_0.storeDict(src.to, Dictionary.Keys.BigInt(257), Dictionary.Values.Address());
+        b_0.storeUint(3021743882, 32);
+        b_0.storeDict(src.to, Dictionary.Keys.Address(), dictValueParserCOINS());
     };
 }
 
 export function loadSplitTons(slice: Slice) {
     let sc_0 = slice;
-    if (sc_0.loadUint(32) !== 1525380688) { throw Error('Invalid prefix'); }
-    let _to = Dictionary.load(Dictionary.Keys.BigInt(257), Dictionary.Values.Address(), sc_0);
+    if (sc_0.loadUint(32) !== 3021743882) { throw Error('Invalid prefix'); }
+    let _to = Dictionary.load(Dictionary.Keys.Address(), dictValueParserCOINS(), sc_0);
     return { $$type: 'SplitTons' as const, to: _to };
 }
 
 function loadTupleSplitTons(source: TupleReader) {
-    let _to = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), Dictionary.Values.Address(), source.readCellOpt());
+    let _to = Dictionary.loadDirect(Dictionary.Keys.Address(), dictValueParserCOINS(), source.readCellOpt());
     return { $$type: 'SplitTons' as const, to: _to };
 }
 
 function loadGetterTupleSplitTons(source: TupleReader) {
-    let _to = Dictionary.loadDirect(Dictionary.Keys.BigInt(257), Dictionary.Values.Address(), source.readCellOpt());
+    let _to = Dictionary.loadDirect(Dictionary.Keys.Address(), dictValueParserCOINS(), source.readCellOpt());
     return { $$type: 'SplitTons' as const, to: _to };
 }
 
 function storeTupleSplitTons(source: SplitTons) {
     let builder = new TupleBuilder();
-    builder.writeCell(source.to.size > 0 ? beginCell().storeDictDirect(source.to, Dictionary.Keys.BigInt(257), Dictionary.Values.Address()).endCell() : null);
+    builder.writeCell(source.to.size > 0 ? beginCell().storeDictDirect(source.to, Dictionary.Keys.Address(), dictValueParserCOINS()).endCell() : null);
     return builder.build();
 }
 
@@ -677,8 +722,8 @@ function initTonSplitter_init_args(src: TonSplitter_init_args) {
 }
 
 async function TonSplitter_init(owner: Address, randomId: bigint) {
-    const __code = Cell.fromBase64('te6ccgECEAEAAygAART/APSkE/S88sgLAQIBYgIDAs7QAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxZ2zzy4ILI+EMBzH8BygABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wye1UDQQCASALDAO07aLt+wGSMH/gcCHXScIflTAg1wsf3iCCEFrrdlC64wIgghCUapi2uo6oMNMfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+DAAJEw4w1wBQYHAdow0x8BghBa63ZQuvLggfQEATGCCJiWgCGBAQH0hG+lIJESlTFtMm0B4pCOqSGCCJiWgKAToFEhcHJDMG1tbds8MIEBASMCWfR4b6UgkRKVMW0ybQHi6BAjXwOBWCX4QW8kE18DErvy9PgP8gB/CQKSbW0ibrOZWyBu8tCAbyIBkTLi+EFvJBNfA/gnbxABoYIImJaAuY6VggiYloBw+wIQJHADBIEAglAj2zww4BAkcAMEgEJQI9s8MAkJAoT5AYLwCVGQGUruYRzolcVQOt+F/YZN55BXRhQvYI0+svqtFOS6jxrbPPgnbxCCCJiWgKFSEHBZcG1tbds8MH/bMeAICQAS+EJSEMcF8uCEAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7CAoAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCD74o7tnm2eGMDQ4AEb4V92omhpAADAHG7UTQ1AH4Y9IAAY4g+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDHg+CjXCwqDCbry4In6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAWQLRAds8DwACIAACMA==');
-    const __system = Cell.fromBase64('te6cckECEgEAAzIAAQHAAQEFoSRtAgEU/wD0pBP0vPLICwMCAWIEDALO0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wds88uCCyPhDAcx/AcoAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsntVA4FA7Ttou37AZIwf+BwIddJwh+VMCDXCx/eIIIQWut2ULrjAiCCEJRqmLa6jqgw0x8BghCUapi2uvLggdM/ATHIAYIQr/kPV1jLH8s/yfhCAXBt2zx/4MAAkTDjDXAGBwgB2jDTHwGCEFrrdlC68uCB9AQBMYIImJaAIYEBAfSEb6UgkRKVMW0ybQHikI6pIYIImJaAoBOgUSFwckMwbW1t2zwwgQEBIwJZ9HhvpSCREpUxbTJtAeLoECNfA4FYJfhBbyQTXwMSu/L0+A/yAH8KApJtbSJus5lbIG7y0IBvIgGRMuL4QW8kE18D+CdvEAGhggiYloC5jpWCCJiWgHD7AhAkcAMEgQCCUCPbPDDgECRwAwSAQlAj2zwwCgoChPkBgvAJUZAZSu5hHOiVxVA634X9hk3nkFdGFC9gjT6y+q0U5LqPGts8+CdvEIIImJaAoVIQcFlwbW1t2zwwf9sx4AkKABL4QlIQxwXy4IQByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsICwCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAIBIA0RAg++KO7Z5tnhjA4QAcbtRNDUAfhj0gABjiD6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIMeD4KNcLCoMJuvLgifpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IgBgQEB1wBZAtEB2zwPAAIwAAIgABG+FfdqJoaQAAyPiPI8');
+    const __code = Cell.fromBase64('te6ccgECEAEAA0EAART/APSkE/S88sgLAQIBYgIDAs7QAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxZ2zzy4ILI+EMBzH8BygABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wye1UDQQCASALDAPa7aLt+wGSMH/gcCHXScIflTAg1wsf3iCCELQcJwq6jpIw0x8BghC0HCcKuvLggfQEATHgIIIQlGqYtrqOqDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH/gwACRMOMNcAUGBwHmggiYloAhgQEL9INvpSCREpUxbTJtAeKQjsEgbpIwbZfQ+gABMW8B4iBu8tCAbyEgggiYloCgE6BSE3ByQzBtbW3bPDCBAQsjAln0dG+lIJQC1DBYlTFtMm0B4ugQI18DgVgl+EFvJBNfAxK78vT4D/IAfwkCkm1tIm6zmVsgbvLQgG8iAZEy4vhBbyQTXwP4J28QAaGCCJiWgLmOlYIImJaAcPsCECRwAwSBAIJQI9s8MOAQJHADBIBCUCPbPDAJCQKE+QGC8AlRkBlK7mEc6JXFUDrfhf2GTeeQV0YUL2CNPrL6rRTkuo8a2zz4J28QggiYloChUhBwWXBtbW3bPDB/2zHgCAkAEvhCUhDHBfLghAHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgKAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAg++KO7Z5tnhjA0OABG+FfdqJoaQAAwBxu1E0NQB+GPSAAGOIPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4Igx4Pgo1wsKgwm68uCJ+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiAGBAQHXAFkC0QHbPA8AAiAAAjA=');
+    const __system = Cell.fromBase64('te6cckECEgEAA0sAAQHAAQEFoSRtAgEU/wD0pBP0vPLICwMCAWIEDALO0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8Wds88uCCyPhDAcx/AcoAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsntVA4FA9rtou37AZIwf+BwIddJwh+VMCDXCx/eIIIQtBwnCrqOkjDTHwGCELQcJwq68uCB9AQBMeAgghCUapi2uo6oMNMfAYIQlGqYtrry4IHTPwExyAGCEK/5D1dYyx/LP8n4QgFwbds8f+DAAJEw4w1wBgcIAeaCCJiWgCGBAQv0g2+lIJESlTFtMm0B4pCOwSBukjBtl9D6AAExbwHiIG7y0IBvISCCCJiWgKAToFITcHJDMG1tbds8MIEBCyMCWfR0b6UglALUMFiVMW0ybQHi6BAjXwOBWCX4QW8kE18DErvy9PgP8gB/CgKSbW0ibrOZWyBu8tCAbyIBkTLi+EFvJBNfA/gnbxABoYIImJaAuY6VggiYloBw+wIQJHADBIEAglAj2zww4BAkcAMEgEJQI9s8MAoKAoT5AYLwCVGQGUruYRzolcVQOt+F/YZN55BXRhQvYI0+svqtFOS6jxrbPPgnbxCCCJiWgKFSEHBZcG1tbds8MH/bMeAJCgAS+EJSEMcF8uCEAcrIcQHKAVAHAcoAcAHKAlAFINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8WUAP6AnABymgjbrORf5MkbrPilzMzAXABygDjDSFus5x/AcoAASBu8tCAAcyVMXABygDiyQH7CAsAmH8BygDIcAHKAHABygAkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDiJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4nABygACfwHKAALJWMwCASANEQIPviju2ebZ4YwOEAHG7UTQ1AH4Y9IAAY4g+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiDHg+CjXCwqDCbry4In6QAEg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIAYEBAdcAWQLRAds8DwACMAACIAARvhX3aiaGkAAMDnLx+g==');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
@@ -738,7 +783,8 @@ const TonSplitter_types: ABIType[] = [
     {"name":"FactoryDeploy","header":1829761339,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"cashback","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwner","header":2174598809,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"ChangeOwnerOk","header":846932810,"fields":[{"name":"queryId","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"newOwner","type":{"kind":"simple","type":"address","optional":false}}]},
-    {"name":"SplitTons","header":1525380688,"fields":[{"name":"to","type":{"kind":"dict","key":"int","value":"address"}}]},
+    {"name":"COINS","header":null,"fields":[{"name":"amount","type":{"kind":"simple","type":"uint","optional":false,"format":"coins"}}]},
+    {"name":"SplitTons","header":3021743882,"fields":[{"name":"to","type":{"kind":"dict","key":"address","value":"COINS","valueFormat":"ref"}}]},
     {"name":"TonSplitter$Data","header":null,"fields":[{"name":"owner","type":{"kind":"simple","type":"address","optional":false}}]},
 ]
 
