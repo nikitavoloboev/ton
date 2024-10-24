@@ -9,15 +9,18 @@ import { SampleJetton } from "./lib/ton-master"
 async function main() {
   try {
     const masterContract = tonClient.open(
-      SampleJetton.fromAddress(Address.parse(getEnvOrThrow("MASTER_ADDRESS"))),
+      SampleJetton.fromAddress(
+        // usdt
+        Address.parse(getEnvOrThrow("JETTON_MASTER_ADDRESS")),
+      ),
     )
-    const childAddress = await masterContract.getGetWalletAddress(
-      Address.parse(""),
+    const splitContractAddress = await masterContract.getGetWalletAddress(
+      Address.parse(getEnvOrThrow("SPLIT_CONTRACT_MASTER_ADDRESS")),
     )
     while (true) {
       console.log("Checking for new transactions...")
       try {
-        await checkForNewTransactions(childAddress, masterContract)
+        await checkForNewTransactions(splitContractAddress, masterContract)
       } catch (error) {
         console.log(error, "error")
       }

@@ -1,18 +1,17 @@
-import "dotenv/config"
 import { Address, OpenedContract, Transaction } from "@ton/core"
+import "dotenv/config"
+import { create, get, set } from "ronin"
 import {
   JettonDefaultWallet,
   loadTokenNotification,
-  loadTokenRecievedMessage,
   loadTokenTransferInternal,
-  storeTokenRecievedMessage,
 } from "./lib/ton-child"
 import { SampleJetton } from "./lib/ton-master"
 import { tonClient } from "./lib/ton-sender"
-import { create, get, set } from "ronin"
+// @ts-ignore
+import { InvalidQueryError } from "ronin/utils"
 // @ts-ignore
 import { fromNano } from "ton"
-import { InvalidQueryError } from "ronin/utils"
 
 console.log("EWEFWEFW")
 const ZeroAddress = "UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ"
