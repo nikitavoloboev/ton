@@ -14,9 +14,6 @@ import { create, get, set } from "ronin"
 import { fromNano } from "ton"
 import { InvalidQueryError } from "ronin/utils"
 
-// TODO: have a worker that checks that jetton split tx, actually worked, after that do ronin db call
-// TODO: below is code that does similar to check whether token was burned or not succesfully
-
 console.log("EWEFWEFW")
 const ZeroAddress = "UQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJKZ"
 const MasterAddress = process.env.MASTER_ADDRESS!
