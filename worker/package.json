@@ -1,0 +1,21 @@
+{
+	"name": "worker",
+	"version": "0.0.1",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --watch src/api.ts"
+	},
+	"dependencies": {
+		"@ton-api/client": "^0.1.0",
+		"@ton/core": "^0.57.0",
+		"@ton/ton": "^15.0.0",
+		"ton": "^13.9.0",
+		"ton-crypto": "^3.2.0",
+		"ronin": "^4.3.1",
+		"tonweb": "^0.0.66"
+	},
+	"devDependencies": {
+		"bun-types": "^1.1.26",
+		"@ronin/drophunt": "^0.0.0-3451177807291"
+	}
+}
