@@ -4,7 +4,7 @@ import {tonClient} from "~/actions";
 import {useProviderSender} from "~/lib/ton-sender";
 import {JettonSplitter, storeForwardPayload} from "~/lib/split/tact_JettonSplitter";
 import {SampleJetton} from "~/lib/ton-master";
-import {storeTokenTransfer} from "~/lib/ton-child";
+import {JettonDefaultWallet, storeTokenTransfer} from "~/lib/ton-child";
 
 
 export function useSplitterActions() {
@@ -44,12 +44,16 @@ export async function splitJettons(sender: Sender, jettonMaster: Address, receip
     amount: bigint,
     address: Address
 })[]) {
-    const jettonSplitterAddress = Address.parse('EQB1n26A9vVc2OYtKSUjgE2OHbWpAql9gmnN5x-NqlCHkQ8Z');
+        const jettonSplitterAddress = Address.parse('EQB1n26A9vVc2OYtKSUjgE2OHbWpAql9gmnN5x-NqlCHkQ8Z');
     const master = tonClient.open(SampleJetton.fromAddress(jettonMaster));
     const childAddress = await master.getGetWalletAddress(sender.address!);
     const map: Dictionary<bigint, Address> = Dictionary.empty();
     receipts.forEach(recipient => map.set(recipient.amount, recipient.address));
-
+    const childJetton = tonClient.open(JettonDefaultWallet.fromAddress(childAddress));
+    const {balance} = await childJetton.getGetWalletData();
+    if(balance < receipts.map(e => e.amount).reduce((a, b) => a + b, 0n)){
+        throw new Error('Not enough funds');
+    }
     await sender.send({
         to: childAddress,
         body: beginCell()
