@@ -1,4 +1,4 @@
-import {Address, beginCell, Dictionary, toNano} from "@ton/core";
+import {Address, beginCell, Dictionary, Sender, toNano} from "@ton/core";
 import {TonSplitter} from "~/lib/split/tact_TonSplitter";
 import {tonClient} from "~/actions";
 import {useProviderSender} from "~/lib/ton-sender";
@@ -8,16 +8,19 @@ import {storeTokenTransfer} from "~/lib/ton-child";
 
 
 export function useSplitterActions() {
+    const sender = useProviderSender();
     return {
-        splitTons,
-        splitJettons,
+        splitTons: (recipients: ({ amount: bigint, address: Address })[]) => splitTons(sender, recipients),
+        splitJettons: (jettonMaster: Address, receipts: ({
+            amount: bigint,
+            address: Address
+        })[]) => splitJettons(sender, jettonMaster, receipts),
     }
 
 }
 
 
-export async function splitTons(recipients: ({ amount: bigint, address: Address })[]) {
-    const sender = useProviderSender();
+export async function splitTons(sender: Sender, recipients: ({ amount: bigint, address: Address })[]) {
 
     const tonSplitter = tonClient.open(
         // await TonSplitter.fromInit(Address.parse('UQAvE-_RTX3_J6vb3WDCs_b4m6u2xLm6VyOdVtu6QshgJhZ2'), BigInt(Math.floor(Math.random() * 10)))
@@ -37,8 +40,10 @@ export async function splitTons(recipients: ({ amount: bigint, address: Address 
     );
 }
 
-export async function splitJettons(jettonMaster: Address, receipts: ({ amount: bigint, address: Address })[]) {
-    const sender = useProviderSender();
+export async function splitJettons(sender: Sender, jettonMaster: Address, receipts: ({
+    amount: bigint,
+    address: Address
+})[]) {
     const jettonSplitterAddress = Address.parse('EQB1n26A9vVc2OYtKSUjgE2OHbWpAql9gmnN5x-NqlCHkQ8Z');
     const master = tonClient.open(SampleJetton.fromAddress(jettonMaster));
     const childAddress = await master.getGetWalletAddress(sender.address!);
@@ -51,7 +56,7 @@ export async function splitJettons(jettonMaster: Address, receipts: ({ amount: b
             .store(
                 storeTokenTransfer({
                     $$type: 'TokenTransfer',
-                    amount: receipts.map(e=>e.amount).reduce((a, b) => a + b, 0n),
+                    amount: receipts.map(e => e.amount).reduce((a, b) => a + b, 0n),
                     queryId: 0n,
                     custom_payload: null,
                     destination: jettonSplitterAddress,
@@ -70,7 +75,6 @@ export async function splitJettons(jettonMaster: Address, receipts: ({ amount: b
             .endCell(),
         value: toNano('0.16') * BigInt(receipts.length) + toNano('0.2'),
     });
-
 
 
 }
