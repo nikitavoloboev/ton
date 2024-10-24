@@ -10,6 +10,7 @@ import {
 import { SampleJetton } from "./lib/ton-master"
 import { tonClient } from "./lib/ton-sender"
 import { create, get, set } from "ronin"
+// @ts-ignore
 import { fromNano } from "ton"
 import { InvalidQueryError } from "ronin/utils"
 
