@@ -11,10 +11,10 @@ export function useSplitterActions() {
     const sender = useProviderSender();
     return {
         splitTons: (recipients: ({ amount: bigint, address: Address })[]) => splitTons(sender, recipients),
-        splitJettons: (jettonMaster: Address, receipts: ({
+        splitJettons: (receipts: ({
             amount: bigint,
             address: Address
-        })[]) => splitJettons(sender, jettonMaster, receipts),
+        })[]) => splitJettons(sender, receipts),
     }
 
 }
@@ -43,13 +43,13 @@ export async function splitTons(sender: Sender, recipients: ({ amount: bigint, a
     );
 }
 
-export async function splitJettons(sender: Sender, jettonMaster: Address, receipts: ({
+export async function splitJettons(sender: Sender, receipts: ({
     amount: bigint,
     address: Address
 })[]) {
-    const jettonSplitterAddress = Address.parse('EQBUfmAlcJHrbD4qCsjCLkZfuA5KKhrmKetRLmLzeNvRNJUP');
-    const master = tonClient.open(SampleJetton.fromAddress(jettonMaster));
-    const childAddress = await master.getGetWalletAddress(sender.address!);
+    const jettonSplitterAddress = Address.parse('EQCuC7ni-iXOhJB-_wS0UcVx7FhLZb_1D2H2qM3tCm8pOjHC');
+    const usdtMaster = tonClient.open(SampleJetton.fromAddress(Address.parse('kQDzWwYwpcvxGoQ1wA-_zZ-xGojNMnC91JdlxCdpJDy1Hi_0')));
+    const childAddress = await usdtMaster.getGetWalletAddress(sender.address!);
     const map: Dictionary<Address, COINS> = Dictionary.empty();
     receipts.forEach(recipient => map.set(recipient.address, {
         $$type: 'COINS',
@@ -70,7 +70,7 @@ export async function splitJettons(sender: Sender, jettonMaster: Address, receip
                     queryId: 0n,
                     custom_payload: null,
                     destination: jettonSplitterAddress,
-                    forward_ton_amount: toNano('0.16') * BigInt(receipts.length),
+                    forward_ton_amount: toNano('0.16') * BigInt(receipts.length) + toNano('0.05'),
                     forward_payload: beginCell()
                         .store(
                             storeForwardPayload({
@@ -83,7 +83,7 @@ export async function splitJettons(sender: Sender, jettonMaster: Address, receip
                 }),
             )
             .endCell(),
-        value: toNano('0.16') * BigInt(receipts.length) + toNano('0.2'),
+        value: toNano('0.16') * BigInt(receipts.length) + toNano('0.25'),
     });
 
 
